@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مختبر ISTE · نسخة الطلبة</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Noto+Kufi+Arabic:wght@600;700;800&family=Noto+Naskh+Arabic:wght@400;600&display=swap">
+<style>
+/* Layout: a workbench — staged tabs; story on one side, the learner's working list on the other */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --sunk:#f6f8fa; --ink:#14202c; --muted:#56626f; --line:#d5dbe2;
+  --accent:#173a5c; --accent-ink:#ffffff;
+  --stu:#1b6f94; --edu:#557f12; --led:#b2302a; --coa:#b86e0b;
+  --ok:#2c7a4c; --bad:#b0242b; --warn:#a86f12;
+  --ok-bg:#e3f2e9; --bad-bg:#f9e2e3; --warn-bg:#f8eedb;
+  --hl:#fff1b8; --hl-line:#e2c24a;
+  --f-display:"Noto Kufi Arabic","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --f-body:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
+  --f-story:"Noto Naskh Arabic","Traditional Arabic","Times New Roman",serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e141a; --surface:#16202a; --sunk:#111a22; --ink:#e5eaf0; --muted:#98a4b1; --line:#2a3644;
+  --accent:#9cc3e6; --accent-ink:#0e141a;
+  --stu:#5cb2d8; --edu:#9bc94f; --led:#ef7268; --coa:#efa94c;
+  --ok:#62c48b; --bad:#f07278; --warn:#e2b453;
+  --ok-bg:#16301f; --bad-bg:#3a1719; --warn-bg:#33280f; --hl:#3b3416; --hl-line:#8c7424; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e141a; --surface:#16202a; --sunk:#111a22; --ink:#e5eaf0; --muted:#98a4b1; --line:#2a3644;
+  --accent:#9cc3e6; --accent-ink:#0e141a;
+  --stu:#5cb2d8; --edu:#9bc94f; --led:#ef7268; --coa:#efa94c;
+  --ok:#62c48b; --bad:#f07278; --warn:#e2b453;
+  --ok-bg:#16301f; --bad-bg:#3a1719; --warn-bg:#33280f; --hl:#3b3416; --hl-line:#8c7424; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15.5px;line-height:1.75;direction:rtl}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.45;margin:0;text-wrap:balance}
+button,select{font:inherit;color:inherit}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+header.top{background:var(--surface);border-bottom:1px solid var(--line)}
+header.top .wrap{padding-block:18px 0;display:flex;flex-direction:column;gap:14px}
+.brand{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.brand h1{font-size:clamp(1.25rem,2.6vw,1.65rem);font-weight:800}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:.92rem}
+.stripe{display:flex;height:6px;width:132px;border-radius:3px;overflow:hidden;margin-bottom:8px}
+.stripe i{flex:1}
+.who{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.who input{font:inherit;color:var(--ink);background:var(--sunk);border:1px solid var(--line);border-radius:6px;padding:6px 10px;width:200px;max-width:100%}
+nav.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 12px 11px;cursor:pointer;white-space:nowrap;color:var(--muted);font-weight:500;display:flex;gap:8px;align-items:center}
+nav.tabs button .n{font-family:var(--f-display);font-size:.78rem;width:22px;height:22px;border-radius:50%;display:inline-grid;place-items:center;background:var(--sunk);border:1px solid var(--line)}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+nav.tabs button[aria-selected="true"] .n{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+nav.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+main .wrap{padding-block:28px 64px}
+section.view{display:flex;flex-direction:column;gap:22px}
+
+.lead{max-width:70ch;color:var(--muted);margin:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px}
+.eyebrow{font-size:.78rem;letter-spacing:.02em;color:var(--muted);font-weight:600}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.grid2>*{min-width:0}
+ol.flow{list-style:none;margin:0;padding:0}
+ol.flow li{display:grid;grid-template-columns:64px 1fr;gap:14px;padding:11px 0;border-top:1px solid var(--line)}
+ol.flow li:first-child{border-top:0}
+ol.flow .t{font-family:var(--f-display);font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+ol.flow b{display:block}
+ol.flow span{color:var(--muted);font-size:.93rem}
+ul.clean{margin:0;padding-inline-start:20px}
+ul.clean li{margin:4px 0}
+.pipeline{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.9rem}
+.pipeline span{background:var(--sunk);border:1px solid var(--line);border-radius:6px;padding:4px 10px}
+.pipeline i{font-style:normal;color:var(--muted)}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.role{border:1px solid var(--line);border-top:4px solid var(--c);border-radius:8px;padding:12px 14px;background:var(--surface)}
+.role h4{font-size:.98rem;color:var(--c)}
+.role p{margin:4px 0 0;font-size:.9rem;color:var(--muted)}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:7px;padding:10px 18px;font-weight:600;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.small{padding:4px 12px;font-size:.85rem;font-weight:500}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{font-size:.85rem;color:var(--muted)}
+.disclaim{font-size:.84rem;color:var(--muted);border-inline-start:3px solid var(--line);padding-inline-start:10px;margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:.88rem;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:600}
+
+/* story */
+.story{font-family:var(--f-story);font-size:1.16rem;line-height:2.15;max-width:72ch}
+.story p{margin:0 0 1.1em}
+.story-title{font-family:var(--f-display);font-size:1.4rem}
+.sent{border-radius:4px;transition:background .2s;padding:1px 0}
+.picking .sent{cursor:pointer}
+.picking .sent:hover{background:var(--sunk);box-shadow:inset 0 -2px 0 var(--line)}
+.sent.got{background:var(--hl);box-shadow:inset 0 -2px 0 var(--hl-line)}
+.sent:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.sent.flash{background:var(--accent);color:var(--accent-ink)}
+
+.work{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:22px;align-items:start}
+.work>*{min-width:0}
+.sticky{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+.count{font-family:var(--f-display);font-variant-numeric:tabular-nums}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.card.act{border-inline-start:4px solid var(--c)}
+.quote{font-family:var(--f-story);font-size:1rem;line-height:1.9;color:var(--muted);border-inline-start:3px solid var(--hl-line);padding-inline-start:10px;margin:0}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;flex-wrap:wrap}
+.seg button{background:var(--surface);border:0;border-inline-start:1px solid var(--line);padding:5px 12px;cursor:pointer;font-size:.88rem}
+.seg button:first-child{border-inline-start:0}
+.seg button[aria-pressed="true"]{background:var(--c,var(--accent));color:var(--accent-ink);font-weight:600}
+.seg.rel button[aria-pressed="true"][data-r="+"]{background:var(--ok-bg);color:var(--ok)}
+.seg.rel button[aria-pressed="true"][data-r="-"]{background:var(--bad-bg);color:var(--bad)}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.seg button[data-a="stu"]{--c:var(--stu)} .seg button[data-a="edu"]{--c:var(--edu)} .seg button[data-a="led"]{--c:var(--led)} .seg button[data-a="coa"]{--c:var(--coa)}
+textarea,select{width:100%;font:inherit;font-size:.92rem;color:var(--ink);background:var(--sunk);border:1px solid var(--line);border-radius:7px;padding:8px 10px}
+textarea{resize:vertical;min-height:44px}
+textarea:focus-visible,select:focus-visible,.who input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field>span{font-size:.82rem;color:var(--muted);font-weight:500}
+.empty{border:1px dashed var(--line);border-radius:9px;padding:22px;text-align:center;color:var(--muted)}
+.actor-tag{font-size:.78rem;font-weight:600;color:var(--c);border:1px solid var(--c);border-radius:20px;padding:0 8px;white-space:nowrap}
+.btext{font-weight:500}
+
+.board{display:flex;flex-direction:column;gap:14px}
+.board h4{font-size:.88rem;color:var(--c);margin-bottom:6px}
+.board ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.board li{display:flex;justify-content:space-between;gap:8px;font-size:.86rem;padding:4px 8px;border-radius:6px;background:var(--sunk)}
+.board li.on{background:var(--ok-bg);color:var(--ok);font-weight:600}
+.board li .k{font-variant-numeric:tabular-nums}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:14px 16px}
+.stat .v{font-family:var(--f-display);font-size:1.6rem;font-weight:800;font-variant-numeric:tabular-nums}
+.stat .k{font-size:.86rem;color:var(--muted)}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:9px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:720px;font-size:.9rem}
+th,td{text-align:start;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.82rem;color:var(--muted);font-weight:600;background:var(--sunk)}
+tr.sec td{background:var(--sunk);font-family:var(--f-display);font-weight:700;color:var(--c);font-size:.92rem}
+.pill{display:inline-block;border-radius:20px;padding:1px 10px;font-size:.8rem;font-weight:600;white-space:nowrap}
+.pill.a{background:var(--ok-bg);color:var(--ok)} .pill.n{background:var(--bad-bg);color:var(--bad)} .pill.w{background:var(--warn-bg);color:var(--warn)}
+details.why summary{cursor:pointer;color:var(--accent);font-size:.85rem}
+details.why div{margin-top:6px;font-size:.87rem;line-height:1.7}
+.matrix{border-collapse:collapse;min-width:0;width:auto}
+.matrix th,.matrix td{text-align:center;padding:8px 14px;border:1px solid var(--line);font-variant-numeric:tabular-nums}
+.matrix td.d{background:var(--ok-bg);color:var(--ok);font-weight:700}
+.locked{text-align:center;padding:40px 22px}
+.locked h2{font-size:1.15rem;margin-bottom:6px}
+
+.lists{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.lists .col{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:14px 16px;border-top:4px solid var(--c)}
+.lists h3{font-size:1rem;color:var(--c);display:flex;justify-content:space-between}
+.lists ul{list-style:none;margin:8px 0 0;padding:0}
+.lists li{padding:5px 0;border-top:1px dashed var(--line);font-size:.9rem;display:flex;gap:8px}
+.lists li:first-child{border-top:0}
+.lists li .c{font-variant-numeric:tabular-nums;color:var(--muted);flex:none;width:30px}
+.switch{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.switch button{border:0;background:var(--surface);padding:6px 14px;cursor:pointer;font-size:.9rem}
+.switch button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.refs{font-size:.86rem;color:var(--muted)}
+.refs p{margin:4px 0;padding-left:2em;text-indent:-2em;direction:ltr;text-align:left}
+.refs a{color:var(--accent)}
+.toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:7px;font-size:.9rem;z-index:20}
+
+[data-mode="stu"] .fac-only{display:none!important}[data-mode="fac"] .stu-only{display:none!important}
+.badge{display:inline-block;font-family:var(--f-body);font-size:.78rem;font-weight:600;border:1px solid var(--accent);color:var(--accent);border-radius:20px;padding:1px 10px;vertical-align:middle;margin-inline-start:8px}
+.keytbl td{font-size:.92rem}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);border-radius:14px 14px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.25);max-height:78vh;overflow:auto;padding-top:12px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.sheet .card{border:0;padding:0}
+.sheet .card.act{border-inline-start:0}
+.sheet-grip{width:40px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 10px}
+.mob-hint{display:none}
+@media (max-width:980px){.mob-hint{display:block}}
+@media (max-width:980px){.work{grid-template-columns:minmax(0,1fr)}.sticky{position:static;max-height:none}}
+@media (max-width:520px){ol.flow li{grid-template-columns:52px 1fr}.who input{width:150px}.story{font-size:1.08rem}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <div>
+        <div class="stripe" aria-hidden="true"><i style="background:var(--stu)"></i><i style="background:var(--edu)"></i><i style="background:var(--led)"></i><i style="background:var(--coa)"></i></div>
+        <h1>مختبر تحليل المواقف التعليمية وفق معايير ISTE <span class="badge" id="modeBadge"></span></h1>
+        <p>من الحكاية الصفية إلى السلوك الإجرائي، ومن السلوك إلى المعيار</p>
+      </div>
+      <label class="who" for="who">اسم المشارك/المجموعة
+        <input id="who" type="text" placeholder="مثال: المجموعة الثالثة">
+      </label>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="مراحل الورشة">
+      <button role="tab" data-tab="intro" aria-selected="true"><span class="n">1</span>الورشة</button>
+      <button role="tab" data-tab="story" aria-selected="false"><span class="n">2</span>الحكاية الصفية</button>
+      <button role="tab" data-tab="extract" aria-selected="false"><span class="n">3</span>استخراج السلوكيات</button>
+      <button role="tab" data-tab="link" aria-selected="false"><span class="n">4</span>الربط بالمعايير</button>
+      <button role="tab" class="fac-only" data-tab="compare" aria-selected="false"><span class="n">5</span>مفتاح الخبير</button>
+      <button role="tab" data-tab="summary" aria-selected="false"><span class="n">6</span>الخلاصة</button>
+    </nav>
+  </div>
+</header>
+
+<main><div class="wrap">
+
+<section class="view" id="v-intro">
+  <div class="grid2">
+    <div class="panel" style="display:flex;flex-direction:column;gap:12px">
+      <span class="eyebrow">فكرة الورشة</span>
+      <h2 style="font-size:1.2rem">نقرأ الحكاية، نفكّكها، ثم نحكم بالدليل</h2>
+      <p style="margin:0">تبدأ الورشة بحكاية صفية مترابطة من صف أول أساسي في درس اجتماعيات. يقرؤها المشارك كاملة، ثم يفكّكها إلى سلوكيات وإجراءات قام بها أربعة أطراف: الأطفال، والمعلمة، والمديرة، ومدرب التكنولوجيا. بعد ذلك يربط كل سلوك بالمعيار الذي يحققه أو يُخلّ به، فيتولّد تلقائيًا حكم على كل معيار من المعايير الستة والعشرين: مطبق أو غير مطبق. وفي الختام يُعرض مفتاح خبير مُعلَّل للمقارنة والنقاش.</p>
+      <div class="pipeline" aria-label="منطق التحليل"><span>حكاية</span><i>←</i><span>سلوك إجرائي</span><i>←</i><span>معيار</span><i>←</i><span>حكم: مطبق / غير مطبق</span></div>
+      <span class="eyebrow" style="margin-top:6px">نواتج التعلم المتوقعة</span>
+      <ul class="clean">
+        <li>يستخرج المشارك من نص سردي سلوكيات وإجراءات قابلة للملاحظة، ويصوغها بأفعال إجرائية.</li>
+        <li>ينسب كل سلوك إلى الطرف المسؤول عنه في منظومة ISTE.</li>
+        <li>يربط السلوك بالمعيار الذي يحققه أو يُخلّ به، ويستنتج المعايير المطبقة وغير المطبقة.</li>
+        <li>يقترح إعادة صياغة لأجزاء من الموقف تنقل معيارًا غير مطبق إلى حيز التطبيق.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <span class="eyebrow">مسار الورشة المقترح (90 دقيقة)</span>
+      <ol class="flow" style="margin-top:8px">
+        <li><span class="t">10 د</span><div><b>تهيئة واستدعاء الإطار</b><span>الأطراف الأربعة، والفرق بين المعيار والهدف.</span></div></li>
+        <li><span class="t">10 د</span><div><b>قراءة الحكاية</b><span>قراءة فردية متصلة دون تحليل.</span></div></li>
+        <li><span class="t">25 د</span><div><b>استخراج السلوكيات</b><span>النقر على الجمل الدالة، وتحديد الفاعل، والصياغة الإجرائية.</span></div></li>
+        <li><span class="t">20 د</span><div><b>الربط بالمعايير</b><span>ربط كل سلوك بمعيار، ومتابعة لوحة المعايير المتحققة.</span></div></li>
+        <li><span class="t">15 د</span><div><b>المقارنة بمفتاح الخبير</b><span>مناقشة السلوكيات الفائتة والروابط المختلفة.</span></div></li>
+        <li><span class="t">10 د</span><div><b>إعادة الهندسة والتأمل</b><span>إعادة كتابة جملة من الحكاية لتحقيق معيار غائب.</span></div></li>
+      </ol>
+    </div>
+  </div>
+  <div class="panel" style="display:flex;flex-direction:column;gap:14px">
+    <span class="eyebrow">الأطراف الأربعة في منظومة ISTE</span>
+    <div class="roles">
+      <div class="role" style="--c:var(--stu)"><h4>الطالب المتعلم · 7 معايير</h4><p>توظيف التكنولوجيا ليكون الطالب فاعلًا ومبدعًا ومسؤولًا عن مسار تعلمه.</p></div>
+      <div class="role" style="--c:var(--edu)"><h4>المعلم الميسّر · 7 معايير</h4><p>الانتقال من التلقين إلى تيسير فرص تعلم حقيقية تراعي تنوع احتياجات المتعلمين.</p></div>
+      <div class="role" style="--c:var(--led)"><h4>قائد التعليم · 5 معايير</h4><p>بناء الرؤية والأنظمة والثقافة الممكنة لتحقيق تحول حقيقي.</p></div>
+      <div class="role" style="--c:var(--coa)"><h4>المدرب الداعم · 7 معايير</h4><p>جسر بين الرؤية والتطبيق، يحوّل الاستراتيجيات إلى ممارسات صفية ناجحة.</p></div>
+    </div>
+    <div class="row"><button class="btn" data-go="story">ابدأ بقراءة الحكاية</button><span class="note">يُحفظ عملك تلقائيًا في هذا المتصفح.</span></div>
+  </div>
+</section>
+
+<section class="view" id="v-story" hidden>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <span class="eyebrow">الحكاية الصفية</span>
+    <h2 class="story-title">الكتاب الناطق: أصحاب المهن في حيّنا</h2>
+    <div class="meta"><span>الصف: <b>الأول الأساسي</b></span><span>المبحث: <b>الاجتماعيات</b></span><span>الوحدة: <b>أصحاب المهن في حيّنا</b></span><span>المدة: <b>أسبوعان</b></span></div>
+    <p class="disclaim">حكاية تدريبية مركّبة صيغت لأغراض الورشة استنادًا إلى ممارسات ميدانية شائعة؛ الأسماء والمدرسة متخيَّلة.</p>
+  </div>
+  <div class="panel"><div class="story" id="storyRead"></div></div>
+  <div class="row"><button class="btn" data-go="extract">انتقل إلى استخراج السلوكيات</button></div>
+</section>
+
+<section class="view" id="v-extract" hidden>
+  <div class="panel" style="padding:16px 18px;display:flex;flex-direction:column;gap:6px">
+    <strong style="font-family:var(--f-display)">كيف تستخرج السلوك؟</strong>
+    <p class="note" style="margin:0">انقر على أي جملة تتضمن سلوكًا أو إجراءً قام به أحد الأطراف، فتنتقل إلى قائمتك. حدّد الفاعل، ثم أعد صياغة السلوك بفعل ماضٍ إجرائي قابل للملاحظة (مثال من خارج الحكاية: «نظّم المعلم زيارة ميدانية للمكتبة العامة»). ليست كل جملة سلوكًا؛ بعض الجمل سردٌ للسياق فقط. ويمكن أن تحمل جملة واحدة أكثر من سلوك.</p>
+    <p class="note mob-hint" style="margin:0"><b>على الهاتف:</b> المس الجملة فتظهر نافذة سفلية لتحديد الفاعل والصياغة، ثم اضغط «تم» لتعود إلى موضعك في الحكاية. تجد قائمة سلوكياتك كاملة أسفل الحكاية.</p>
+  </div>
+  <div class="work">
+    <div class="panel"><div class="story picking" id="storyPick"></div></div>
+    <div class="sticky" style="display:flex;flex-direction:column;gap:10px">
+      <h3 style="font-size:1rem">السلوكيات المستخرجة <span class="count" id="exCount">0</span></h3>
+      <div id="exList" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+  </div>
+  <div class="row"><button class="btn" data-go="link">انتقل إلى الربط بالمعايير</button></div>
+</section>
+
+<section class="view" id="v-link" hidden>
+  <div class="panel" style="padding:16px 18px;display:flex;flex-direction:column;gap:6px">
+    <strong style="font-family:var(--f-display)">اربط كل سلوك بمعيار</strong>
+    <p class="note" style="margin:0">اختر المعيار من معايير الطرف الفاعل، ثم حدّد العلاقة: هل يحقق السلوك المعيار أم يُخلّ به؟ يُعدّ المعيار <b>مطبقًا</b> إذا ارتبط به سلوك واحد على الأقل يحققه، وما عدا ذلك <b>غير مطبق</b>. تتحدّث لوحة المعايير مباشرة مع كل ربط.</p>
+  </div>
+  <div class="work">
+    <div id="lkList" style="display:flex;flex-direction:column;gap:10px;min-width:0"></div>
+    <aside class="sticky panel" style="padding:16px" aria-label="لوحة المعايير">
+      <div class="row" style="justify-content:space-between;margin-bottom:10px"><strong style="font-family:var(--f-display)">لوحة المعايير</strong><span class="note"><span class="count" id="onCount">0</span> مطبق من 26</span></div>
+      <div class="board" id="board"></div>
+    </aside>
+  </div>
+  <div class="panel row" style="justify-content:space-between">
+    <span id="readyMsg" class="note"></span>
+    <button class="btn fac-only" data-go="compare">قارن تحليلك بمفتاح الخبير</button><button class="btn stu-only" data-go="summary">انتقل إلى الخلاصة</button>
+  </div>
+</section>
+
+<section class="view" id="v-compare" hidden></section>
+
+<section class="view" id="v-summary" hidden>
+  <div class="row" style="justify-content:space-between">
+    <div><span class="eyebrow">الخلاصة</span><h2 style="font-size:1.3rem">قائمة المعايير المطبقة وغير المطبقة</h2></div>
+    <div class="switch fac-only" role="group" aria-label="مصدر القائمة">
+      <button data-src="mine" aria-pressed="true">تحليلي</button>
+      <button data-src="key" aria-pressed="false">مفتاح الخبير</button>
+    </div>
+  </div>
+  <div class="lists" id="lists"></div>
+  <div class="panel" style="display:flex;flex-direction:column;gap:12px">
+    <span class="eyebrow">إعادة الهندسة والتأمل</span>
+    <label for="r1"><b>1.</b> اختر معيارًا غير مطبق، وأعد كتابة جملة من الحكاية (أو أضف جملة) بحيث يصبح مطبقًا. اكتب الجملة كما ستظهر في الحكاية المعدّلة.</label>
+    <textarea id="r1" rows="3"></textarea>
+    <label for="r2"><b>2.</b> <span class="fac-only">ما السلوك الذي فاتك استخراجه أو اختلف ربطك فيه عن مفتاح الخبير؟ ما الذي جعله صعب الالتقاط؟</span><span class="stu-only">أي سلوك وجدت ربطه بمعيار واحد أصعب من غيره؟ ما المعياران اللذان تردّدت بينهما، ولماذا اخترت أحدهما؟</span></label>
+    <textarea id="r2" rows="3"></textarea>
+    <label for="r3"><b>3.</b> كيف ستوظّف معايير الطالب (ISTE) عند تخطيط درس لأطفال في سن ست سنوات؟ اذكر ممارسة واحدة.</label>
+    <textarea id="r3" rows="3"></textarea>
+    <div class="row"><button class="btn" id="copyReport">نسخ التقرير الكامل</button><span class="note stu-only">الصق التقرير في نموذج التسليم الذي يحدده الميسّر.</span><button class="btn ghost" id="resetAll">بدء تحليل جديد</button><span class="note" id="resetConfirm" hidden>سيُمسح التحليل الحالي. <button class="btn ghost small" id="resetYes">تأكيد المسح</button></span></div>
+  </div>
+  <div class="panel refs">
+    <span class="eyebrow">المراجع (APA 7)</span>
+    <p>International Society for Technology in Education. (2016). <i>ISTE standards for students</i>. <a href="https://iste.org/standards/students" target="_blank" rel="noopener">https://iste.org/standards/students</a></p>
+    <p>International Society for Technology in Education. (2017). <i>ISTE standards for educators</i>. <a href="https://iste.org/standards/educators" target="_blank" rel="noopener">https://iste.org/standards/educators</a></p>
+    <p>International Society for Technology in Education. (2018). <i>ISTE standards for education leaders</i>. <a href="https://iste.org/standards/education-leaders" target="_blank" rel="noopener">https://iste.org/standards/education-leaders</a></p>
+    <p>International Society for Technology in Education. (2019). <i>ISTE standards for coaches</i>. <a href="https://iste.org/standards/coaches" target="_blank" rel="noopener">https://iste.org/standards/coaches</a></p>
+    <p>Crompton, H., &amp; Sykora, C. (2021). Developing instructional technology standards for educators: A design-based research study. <i>Computers and Education Open, 2</i>, 100044. <a href="https://doi.org/10.1016/j.caeo.2021.100044" target="_blank" rel="noopener">https://doi.org/10.1016/j.caeo.2021.100044</a></p>
+  </div>
+</section>
+
+</div></main>
+<div class="sheet" id="sheet" hidden role="dialog" aria-label="تحرير السلوك المستخرج">
+  <div class="sheet-grip" aria-hidden="true"></div>
+  <div class="sheet-head"><strong style="font-family:var(--f-display)">سلوك مستخرج</strong><button class="btn small" id="sheetDone">تم، عودة إلى الحكاية</button></div>
+  <div id="sheetBody"></div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const STORY=[
+ [["s1","في بداية العام الدراسي، دعت أ. رنا، مديرة مدرسة الياسمين الأساسية، معلماتِ الصفوف الأولى وعددًا من أولياء الأمور إلى لقاء صاغوا فيه معًا خطة بسيطة عنوانها «صفوف أولى تتعلّم بالتكنولوجيا»، تحدد ما يُراد أن يتعلّمه الأطفال وكيف ستُقاس النتائج."],
+  ["s2","وخصّصت في الجدول ساعة أسبوعية تلتقي فيها المعلمات بمدرب التكنولوجيا للتعلّم والتخطيط المشترك."],
+  ["s3","كما زوّدت كل صف أول بثمانية أجهزة لوحية بأغطية واقية، وطلبت من الفني ألّا يُثبَّت عليها إلا التطبيقات المعتمدة، وأن تُفعَّل إعدادات حماية الأطفال."]],
+ [["s4","كانت أ. هدى، معلمة الصف الأول «ب»، تستعد لتدريس وحدة «أصحاب المهن في حيّنا» في مادة الاجتماعيات."],
+  ["s5","وقبل أسابيع من الوحدة التحقت بدورة إلكترونية قصيرة عن الكتب الرقمية الناطقة، ووضعت لنفسها هدفًا: أن يتحدث كل طفل في صفها عن مهنة واحدة بثقة."],
+  ["s6","وفي الساعة الأسبوعية جلس معها أ. سامر، مدرب التكنولوجيا، فاستمع أولًا إلى قلقها من أن الأطفال أصغر من أن يستخدموا الأجهزة، ثم طمأنها وعرض أن يحضر معها الحصة الأولى."],
+  ["s7","وحدّثها عن فكرة تعلّمها من مجتمع مدربي التكنولوجيا الذي ينتمي إليه: أن يصنع الأطفال كتابًا رقميًا بأصواتهم وصورهم."],
+  ["s8","ثم صمّما معًا النشاط خطوة خطوة، بحيث يرتبط بحيّ الأطفال الحقيقي."],
+  ["s9","وكان أ. سامر قد وزّع قبل ذلك استبانة قصيرة على معلمات الصفوف الأولى يسألهن عمّا يحتجنه أكثر، فبنى على نتائجها ورشة قصيرة عن التسجيل الصوتي حضرتها المعلمات جميعًا."]],
+ [["s10","في الحصة الأولى عرضت المعلمة على الأطفال صورًا لأشخاص من الحي: الخبّاز، والطبيبة، وساعي البريد، والمزارع."],
+  ["s11","ثم سألت كل طفل: «أي مهنة تحب أن تتعرّف إليها؟ وما السؤال الذي تريد أن تسأله لصاحبها؟»، فاختار الأطفال مهنهم وصاغوا أسئلتهم بمساعدتها."],
+  ["s12","وأعدّت لكل مجموعة بطاقة تعليمات مصوّرة مرفقة بتسجيل صوتي، حتى تتمكن سلمى، التي لم تتقن القراءة بعد، من متابعة الخطوات وحدها."],
+  ["s13","ودعت أبا خالد الخبّاز، وهو والد أحد الأطفال، وأمّ يوسف الطبيبة، لزيارة الصف والحديث عن عملهما."]],
+ [["s14","قبل الزيارة اتفقت المعلمة مع الأطفال على قاعدة واضحة: «نستأذن قبل أن نصوّر أحدًا أو نسجّل صوته»."],
+  ["s15","وحين وصل أبو خالد رفع الأطفال أيديهم وسألوه إن كان يسمح لهم بتصويره، فابتسم ووافق."],
+  ["s16","طرح الأطفال أسئلتهم على الخبّاز، ثم قارنوا ما قاله عن استيقاظه قبل الفجر بما في كتاب الاجتماعيات، فوجدوا معلومة جديدة لم تكن في الكتاب."],
+  ["s17","وعلى الجهاز اللوحي رتّبوا صور مراحل صنع الخبز بالسحب والإفلات: العجن، ثم التقطيع، ثم الخَبز، ثم البيع، وجرّبوا ترتيبات خاطئة حتى وصلوا إلى التسلسل الصحيح."]],
+ [["s18","في الحصة الثانية ملأ الأطفال صفحات الكتاب الرقمي على قالب جاهز أعدّته المعلمة، فيه المكان نفسه للصورة والجملة في كل صفحة، دون أن يُطلب منهم تجربة شكل آخر أو تحسين صفحاتهم."],
+  ["s19","واختار كل طفل كيف يعبّر عن المهنة: برسمة يصوّرها، أو بصورة التقطها، أو بتسجيل صوتي يقول فيه جملة عنها."],
+  ["s20","ثم سجّل الأطفال بأصواتهم جملًا قصيرة مثل «الخبّاز يستيقظ قبل الفجر ليخبز لنا»، وعُرض الكتاب في نهاية الأسبوع على الأسر في لقاء مفتوح."],
+  ["s21","واقترح عمر أن يرسلوا كتابهم إلى صف أول في مدرسة أخرى ليتعرّفوا إلى مهن حيّ آخر، لكن المعلمة قالت إن الوقت لا يسمح."]],
+ [["s22","أخبرت المعلمة المديرة أن ثلاثة أطفال لا يملكون أجهزة في البيت، ولم يستطيعوا الاستماع إلى الكتاب مع أسرهم، فأجابت بأن الأمر سيُدرس في العام القادم."],
+  ["s23","ولتسهيل مشاركة الكتاب نصح أ. سامر المعلمة بتطبيق مجاني مليء بالإعلانات يطلب أسماء الأطفال وصورهم، دون أن يراجع سياسة الخصوصية فيه."],
+  ["s24","وفي نهاية الوحدة وضعت المعلمة لكل كتاب علامة واحدة على جمال الصفحات، دون أن تتابع أثناء العمل ما تعلّمه كل طفل عن المهنة أو تدوّن ملاحظاتها عنه."],
+  ["s25","ولم يطلب أ. سامر أي معلومات عن تعلّم الأطفال، واكتفى بأن سأل المعلمة: «هل أعجبهم النشاط؟»."]],
+ [["s26","وفي اجتماع المعلمات أثنى أ. سامر على تجربة أ. هدى، وعرض صورًا من الكتاب ليشجّع زميلاتها على خوض تجربة مماثلة."],
+  ["s27","وحين طلبت منها زميلتان أن تساعدهما في تطبيق الفكرة في صفّيهما، اعتذرت بلطف لانشغالها."],
+  ["s28","أما المديرة فلم تكن تتابع ما يجري في التعليم الرقمي خارج مدرستها، واكتفت بما ينقله إليها أ. سامر."]]
+];
+const SENT={},SIDX={};STORY.flat().forEach(([id,t],i)=>{SENT[id]=t;SIDX[id]=i+1});
+
+const GROUPS=[
+ {k:"stu",name:"الطالب المتعلم",short:"الأطفال"},
+ {k:"edu",name:"المعلم الميسّر",short:"المعلمة"},
+ {k:"led",name:"قائد التعليم",short:"المديرة"},
+ {k:"coa",name:"المدرب الداعم",short:"المدرب"}
+];
+const GN=k=>GROUPS.find(g=>g.k===k);
+
+const MODE="stu";
+document.documentElement.dataset.mode=MODE;
+const STD=[
+ {id:"1.1",g:"stu",n:"المتعلم المتمكّن",d:"يختار أهدافه التعليمية ويوظف التكنولوجيا لتحقيقها."},
+ {id:"1.2",g:"stu",n:"المواطن الرقمي",d:"يدير هويته الرقمية ويتخذ قرارات آمنة وأخلاقية وقانونية."},
+ {id:"1.3",g:"stu",n:"باني المعرفة",d:"يقيّم دقة الموارد ويبني المعرفة من خلال استكشاف قضايا واقعية."},
+ {id:"1.4",g:"stu",n:"المصمم المبتكر",d:"يستخدم عملية تصميم مدروسة لتوليد الأفكار وحل المشكلات."},
+ {id:"1.5",g:"stu",n:"المفكر الحاسوبي",d:"يحلل البيانات ويستخدم التفكير الخوارزمي لتطوير حلول."},
+ {id:"1.6",g:"stu",n:"المتواصل المبدع",d:"يعبّر بوضوح باستخدام المنصات والوسائط المناسبة لجمهوره."},
+ {id:"1.7",g:"stu",n:"المتعاون العالمي",d:"يستخدم التقنيات للعمل مع فرق محلية وعالمية لفهم وجهات نظر متعددة."},
+ {id:"2.1",g:"edu",n:"المتعلم المهني",d:"يستكشف الابتكارات الواعدة ويحدد أهدافًا لتحسين ممارسات التدريس."},
+ {id:"2.2",g:"edu",n:"القائد",d:"يدعم الوصول العادل للتكنولوجيا، ويُنمذج لزملائه توظيف الأدوات الرقمية الجديدة."},
+ {id:"2.3",g:"edu",n:"المواطن",d:"يرشد الطلاب للممارسات الآمنة والمسؤولة ويعزز الإلمام الرقمي."},
+ {id:"2.4",g:"edu",n:"المتعاون",d:"يخصص وقتًا للتعاون مع الزملاء والطلاب والمجتمع لاكتشاف موارد جديدة وحل المشكلات."},
+ {id:"2.5",g:"edu",n:"المصمم",d:"يبتكر أنشطة تعليمية حقيقية وبيئات تعلم مخصصة وعادلة."},
+ {id:"2.6",g:"edu",n:"الميسّر",d:"يدير استخدام المنصات الرقمية ويوفر طرقًا بديلة للطلاب لإثبات كفاءتهم."},
+ {id:"2.7",g:"edu",n:"المحلل",d:"يستخدم البيانات التكوينية والختامية لتوجيه التقدم وإضفاء الطابع الشخصي على التعلم."},
+ {id:"3.1",g:"led",n:"مناصر المواطنة الرقمية والإنصاف",d:"يضمن مشاركة جميع الطلاب بإنصاف ويمثل نموذجًا للاستخدام الصحي والأخلاقي."},
+ {id:"3.2",g:"led",n:"المخطط صاحب الرؤية",d:"يجمع أصحاب المصلحة لبناء خطة استراتيجية تقود التغيير لتحسين التعلم."},
+ {id:"3.3",g:"led",n:"القائد الممكِّن",d:"يبني ثقافة الابتكار ويوفر الوقت والموارد لتمكين المعلمين مهنيًا."},
+ {id:"3.4",g:"led",n:"مصمم الأنظمة",d:"يبني بنية تحتية رقمية قوية قابلة للتطوير، تحمي الخصوصية وتدعم التعلم الفعال."},
+ {id:"3.5",g:"led",n:"المتعلم المتصل",d:"يشارك بانتظام في شبكات التعلم المهني ويبقى مطلعًا على أحدث الابتكارات."},
+ {id:"4.1",g:"coa",n:"عامل التغيير",d:"يبني رؤية مشتركة ويحتفي بالمعلمين الذين يستخدمون التكنولوجيا بفعالية."},
+ {id:"4.2",g:"coa",n:"المتعلم المتصل",d:"يشارك بنشاط في شبكات التعلم لمواكبة الابتكارات التكنولوجية."},
+ {id:"4.3",g:"coa",n:"المتعاون",d:"ينشئ علاقات مبنية على الثقة لدعم المعلمين في استكشاف استراتيجيات جديدة."},
+ {id:"4.4",g:"coa",n:"مصمم التعليم",d:"يتعاون لتطوير خبرات وبيئات تعلم رقمية حقيقية وشاملة."},
+ {id:"4.5",g:"coa",n:"ميسّر التعلم المهني",d:"يصمم تعلمًا مهنيًا مخصصًا بناءً على تقييم الاحتياجات لدعم المعلمين."},
+ {id:"4.6",g:"coa",n:"صانع القرار المستند إلى البيانات",d:"ينمذج ويدعم استخدام البيانات النوعية والكمية لتوجيه التعلم."},
+ {id:"4.7",g:"coa",n:"مناصر المواطن الرقمي",d:"يدعم المعلمين لفحص المحتوى نقديًا وتعزيز المساحات الآمنة والشاملة عبر الإنترنت."}
+];
+const SN=id=>STD.find(x=>x.id===id);
+
+const EXP=[];const KEYV={};
+
+const LBL={a:"مطبق",n:"غير مطبق"};
+const KEY="iste-lab-v4-"+MODE;
+let st={who:"",bs:[],refl:{r1:"",r2:"",r3:""},force:false,seq:0};
+try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s)st=Object.assign(st,s)}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const gc=k=>`var(--${k})`;
+let listSrc="mine";
+const isReady=()=>st.bs.length>0&&st.bs.every(b=>b.a&&b.std&&b.r);
+
+function storyHTML(pick){return STORY.map(p=>`<p>${p.map(([id,t])=>`<span class="sent" data-sid="${id}"${pick?` tabindex="0" role="button" aria-label="استخراج سلوك من الجملة ${SIDX[id]}"`:""}>${t}</span>`).join(" ")}</p>`).join("")}
+$("#storyRead").innerHTML=storyHTML(false);
+$("#storyPick").innerHTML=storyHTML(true);
+function markStory(){document.querySelectorAll("#storyPick .sent").forEach(el=>el.classList.toggle("got",st.bs.some(b=>b.sid===el.dataset.sid)))}
+
+const mqM=matchMedia("(max-width:980px)");
+let sheetId=null,sheetScroll=0;
+function cardHTML(b){return `<article class="card act" data-id="${b.id}" style="--c:${b.a?gc(b.a):"var(--line)"}">
+    <p class="quote">${SENT[b.sid]}</p>
+    <div class="field"><span>الفاعل</span><div class="seg" role="group" aria-label="الفاعل">${GROUPS.map(g=>`<button data-a="${g.k}" aria-pressed="${b.a===g.k}">${g.short}</button>`).join("")}</div></div>
+    <label class="field" for="t${sheetId===b.id?"S":""}-${b.id}"><span>الصياغة الإجرائية للسلوك</span><textarea id="t${sheetId===b.id?"S":""}-${b.id}" rows="2" placeholder="صِغ السلوك بفعل ماضٍ إجرائي: من فعل ماذا؟">${esc(b.t)}</textarea></label>
+    <div class="row" style="justify-content:space-between"><button class="btn ghost small" data-act="dup">سلوك آخر من الجملة نفسها</button><button class="btn ghost small" data-act="del">حذف</button></div>
+  </article>`}
+function openSheet(id){sheetId=id;sheetScroll=window.scrollY;renderSheet();$("#sheet").hidden=false}
+function closeSheet(){sheetId=null;$("#sheet").hidden=true;renderEx();window.scrollTo({top:sheetScroll})}
+function renderSheet(){const b=st.bs.find(x=>x.id===sheetId);if(!b){closeSheet();return}$("#sheetBody").innerHTML=cardHTML(b)}
+$("#sheetDone").addEventListener("click",closeSheet);
+function addB(sid){const b={id:"b"+(++st.seq),sid,a:"",t:"",std:"",r:""};st.bs.push(b);st.bs.sort((x,y)=>SIDX[x.sid]-SIDX[y.sid]);save();renderEx();markStory();
+  if(mqM.matches){openSheet(b.id);return}
+  const el=document.querySelector(`#exList [data-id="${b.id}"]`);if(el){el.scrollIntoView({block:"nearest"});el.querySelector("textarea").focus({preventScroll:true})}}
+function pick(el){const sid=el.dataset.sid;const ex=st.bs.find(b=>b.sid===sid);
+  if(ex){if(mqM.matches){openSheet(ex.id);return}
+    const c=document.querySelector(`#exList [data-id="${ex.id}"]`);if(c){c.scrollIntoView({block:"nearest"});c.querySelector("textarea").focus({preventScroll:true})}return}
+  addB(sid)}
+$("#storyPick").addEventListener("click",e=>{const el=e.target.closest(".sent");if(el)pick(el)});
+$("#storyPick").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.classList.contains("sent")){e.preventDefault();pick(e.target)}});
+
+function renderEx(){
+  $("#exCount").textContent=st.bs.length;
+  if(!st.bs.length){$("#exList").innerHTML=`<div class="empty">${mqM.matches?"المس":"انقر على"} جملة في الحكاية لاستخراج أول سلوك.</div>`;return}
+  $("#exList").innerHTML=st.bs.map(cardHTML).join("");
+}
+function onCardClick(e){const c=e.target.closest(".card");if(!c)return;const b=st.bs.find(x=>x.id===c.dataset.id);if(!b)return;
+  const inSheet=!!e.target.closest("#sheet");
+  const ab=e.target.closest(".seg button");if(ab){if(b.a!==ab.dataset.a){b.a=ab.dataset.a;b.std=""}c.style.setProperty("--c",gc(b.a));c.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed",x===ab));save();if(!inSheet&&sheetId)renderSheet();return}
+  const act=e.target.closest("[data-act]");if(!act)return;
+  if(act.dataset.act==="del"){st.bs=st.bs.filter(x=>x!==b);save();markStory();if(inSheet){closeSheet()}else renderEx()}
+  if(act.dataset.act==="dup")addB(b.sid);
+}
+function onCardInput(e){if(e.target.tagName!=="TEXTAREA")return;const b=st.bs.find(x=>x.id===e.target.closest(".card").dataset.id);if(b){b.t=e.target.value;save()}}
+["#exList","#sheetBody"].forEach(sel=>{$(sel).addEventListener("click",onCardClick);$(sel).addEventListener("input",onCardInput)});
+$("#exList").addEventListener("focusin",e=>{const c=e.target.closest(".card");if(!c)return;const b=st.bs.find(x=>x.id===c.dataset.id);
+  document.querySelectorAll("#storyPick .sent").forEach(el=>el.classList.toggle("flash",el.dataset.sid===b.sid))});
+$("#exList").addEventListener("focusout",()=>document.querySelectorAll("#storyPick .flash").forEach(el=>el.classList.remove("flash")));
+
+function renderLink(){
+  if(!st.bs.length){$("#lkList").innerHTML=`<div class="empty">لا توجد سلوكيات بعد. ابدأ من مرحلة الاستخراج.<div style="margin-top:10px"><button class="btn small" data-go="extract">الذهاب إلى الاستخراج</button></div></div>`;renderBoard();return}
+  $("#lkList").innerHTML=st.bs.map(b=>{
+    const g=b.a?GN(b.a):null;
+    return `<article class="card act" data-id="${b.id}" style="--c:${b.a?gc(b.a):"var(--line)"}">
+      <div class="row" style="justify-content:space-between;align-items:flex-start;flex-wrap:nowrap"><span class="btext">${b.t?esc(b.t):`<span class="note">لم تُصَغ بعد: </span>${SENT[b.sid]}`}</span>${g?`<span class="actor-tag" style="--c:${gc(b.a)}">${g.short}</span>`:""}</div>
+      ${!g?`<p class="note" style="margin:0;color:var(--bad)">حدّد الفاعل في مرحلة الاستخراج أولًا لتظهر معاييره.</p>`:`
+      <div class="grid2" style="gap:10px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+        <label class="field" for="s-${b.id}"><span>المعيار (${g.name})</span>
+          <select id="s-${b.id}"><option value="">اختر المعيار</option>${STD.filter(x=>x.g===b.a).map(x=>`<option value="${x.id}" ${b.std===x.id?"selected":""}>${x.id} ${x.n}</option>`).join("")}</select></label>
+        <div class="field"><span>العلاقة</span><div class="seg rel" role="group" aria-label="العلاقة"><button data-r="+" aria-pressed="${b.r==="+"}">يحقق المعيار</button><button data-r="-" aria-pressed="${b.r==="-"}">يُخلّ بالمعيار</button></div></div>
+      </div>
+      ${b.std?`<p class="note" style="margin:0">${SN(b.std).d}</p>`:""}`}
+    </article>`}).join("");
+  renderBoard();
+}
+$("#lkList").addEventListener("change",e=>{if(e.target.tagName!=="SELECT")return;const b=st.bs.find(x=>x.id===e.target.closest(".card").dataset.id);b.std=e.target.value;save();renderLink();const s=document.getElementById("s-"+b.id);s&&s.focus()});
+$("#lkList").addEventListener("click",e=>{const rb=e.target.closest(".seg.rel button");if(!rb)return;const c=rb.closest(".card");const b=st.bs.find(x=>x.id===c.dataset.id);b.r=rb.dataset.r;c.querySelectorAll(".seg.rel button").forEach(x=>x.setAttribute("aria-pressed",x===rb));save();renderBoard()});
+
+function myVerdict(id,bs=st.bs){return bs.some(b=>b.std===id&&b.r==="+")?"a":"n"}
+function renderBoard(){
+  let on=0;
+  $("#board").innerHTML=GROUPS.map(g=>`<div style="--c:${gc(g.k)}"><h4>${g.name}</h4><ul>${STD.filter(x=>x.g===g.k).map(x=>{const v=myVerdict(x.id);if(v==="a")on++;
+    const n=st.bs.filter(b=>b.std===x.id).length;return `<li class="${v==="a"?"on":""}"><span><span class="k">${x.id}</span> ${x.n}</span><span>${v==="a"?"مطبق":n?"غير مطبق":"—"}</span></li>`}).join("")}</ul></div>`).join("");
+  $("#onCount").textContent=on;
+  const pend=st.bs.filter(b=>!b.a||!b.std||!b.r).length;
+  $("#readyMsg").textContent=!st.bs.length?"لم تُستخرج سلوكيات بعد.":pend?`تبقّى ${pend} من السلوكيات دون ربط كامل.`:`اكتمل ربط ${st.bs.length} سلوكًا. ${MODE==="fac"?"يمكنك الآن فتح مفتاح الخبير.":"انتقل إلى الخلاصة لنسخ التقرير."}`;
+}
+
+function matchExp(e,bs){
+  const multi=EXP.filter(x=>x.sid===e.sid).length>1;
+  const c=bs.filter(b=>b.sid===e.sid&&(!multi||b.a===e.a));
+  const exact=c.find(b=>b.std===e.std&&b.r===e.r);
+  return {cand:exact||c[0]||null,exact:!!exact};
+}
+const relTxt=r=>r==="+"?"يحقق":r==="-"?"يُخلّ":"—";
+function compareHTML(bs){
+  let cap=0,ok=0;
+  const rowsA=EXP.map(e=>{const m=matchExp(e,bs);if(m.cand)cap++;if(m.exact)ok++;
+    let status;
+    if(!m.cand)status=`<span class="pill n">لم يُستخرج</span>`;
+    else if(m.exact)status=`<span class="pill a">مطابق للمفتاح</span>`;
+    else status=`<span class="pill w">رُبط بشكل مختلف</span><div class="note" style="margin-top:4px">${m.cand.std?m.cand.std+" "+SN(m.cand.std).n:"—"} · ${relTxt(m.cand.r)}</div>`;
+    return `<tr><td class="note" style="font-variant-numeric:tabular-nums">${SIDX[e.sid]}</td>
+      <td><div>${e.b}</div><details class="why"><summary>الجملة والتعليل</summary><div><span style="font-family:var(--f-story)">«${SENT[e.sid]}»</span><br><b>التعليل:</b> ${e.why}</div></details></td>
+      <td><span class="actor-tag" style="--c:${gc(e.a)}">${GN(e.a).short}</span></td>
+      <td><b style="font-variant-numeric:tabular-nums">${e.std}</b> ${SN(e.std).n}<div style="margin-top:4px"><span class="pill ${e.r==="+"?"a":"n"}">${relTxt(e.r)}</span></div></td>
+      <td>${status}</td></tr>`}).join("");
+  const expS=new Set(EXP.map(e=>e.sid));
+  const extra=[...new Set(bs.filter(b=>!expS.has(b.sid)).map(b=>b.sid))];
+  let agree=0;const M={a:{a:0,n:0},n:{a:0,n:0}};
+  let rowsB="";
+  GROUPS.forEach(g=>{rowsB+=`<tr class="sec" style="--c:${gc(g.k)}"><td colspan="4">${g.name}</td></tr>`;
+    STD.filter(x=>x.g===g.k).forEach(x=>{const mv=myVerdict(x.id,bs),kv=KEYV[x.id];if(mv===kv)agree++;M[mv][kv]++;
+      rowsB+=`<tr><td><b style="font-variant-numeric:tabular-nums">${x.id}</b> ${x.n}</td><td><span class="pill ${mv}">${LBL[mv]}</span></td><td><span class="pill ${kv}">${LBL[kv]}</span></td>
+      <td>${mv===kv?`<span style="color:var(--ok);font-weight:600">تطابق</span>`:`<span style="color:var(--bad);font-weight:600">اختلاف</span>`}${x.fix?`<details class="why"><summary>مقترح لإعادة الهندسة</summary><div>${x.fix}</div></details>`:""}</td></tr>`})});
+  return `
+  <div class="stats">
+    <div class="stat"><div class="v">${cap}/${EXP.length}</div><div class="k">سلوكيات المفتاح المستخرجة</div></div>
+    <div class="stat"><div class="v">${ok}/${EXP.length}</div><div class="k">سلوكيات رُبطت بالمعيار والعلاقة كما في المفتاح</div></div>
+    <div class="stat"><div class="v">${Math.round(agree/26*100)}%</div><div class="k">اتفاق الحكم على المعايير (${agree} من 26)</div></div>
+    <div class="stat"><div class="v">${extra.length}</div><div class="k">جمل سياقية عُدّت سلوكًا</div></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <h3 style="font-size:1.05rem">أولًا: السلوكيات وربطها</h3>
+    <div class="tbl-wrap"><table><thead><tr><th>الجملة</th><th>السلوك كما صاغه الخبير</th><th>الفاعل</th><th>المعيار والعلاقة</th><th>تحليل المجموعة</th></tr></thead><tbody>${rowsA}</tbody></table></div>
+    ${extra.length?`<p class="note" style="margin:0">جمل استُخرجت ولا يعدّها المفتاح سلوكًا مرتبطًا بمعيار: ${extra.map(s=>"الجملة "+SIDX[s]).join("، ")}. ناقش: هل تصف فعلًا قابلًا للملاحظة أم تمهيدًا للأحداث؟</p>`:""}
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <h3 style="font-size:1.05rem">ثانيًا: الحكم على المعايير</h3>
+    <div class="panel" style="display:flex;flex-direction:column;gap:8px;padding:16px">
+      <span class="eyebrow">مصفوفة الاتفاق (الصفوف: حكم المجموعة · الأعمدة: المفتاح)</span>
+      <div style="overflow-x:auto"><table class="matrix"><tr><th></th>${["a","n"].map(s=>`<th>${LBL[s]}</th>`).join("")}</tr>${["a","n"].map(r=>`<tr><th>${LBL[r]}</th>${["a","n"].map(c=>`<td class="${r===c?"d":""}">${M[r][c]}</td>`).join("")}</tr>`).join("")}</table></div>
+      <p class="note" style="margin:0">ارتفاع خانة «مطبق عند المجموعة / غير مطبق في المفتاح» يدل على ميل إلى التساهل، وارتفاع الخانة المقابلة يدل على سلوكيات فات التقاطها أو ربطها.</p>
+    </div>
+    <div class="tbl-wrap"><table style="min-width:560px"><thead><tr><th>المعيار</th><th>حكم المجموعة</th><th>المفتاح</th><th>النتيجة</th></tr></thead><tbody>${rowsB}</tbody></table></div>
+  </div>`;
+}
+function keyHTML(){
+  const rows=EXP.map(e=>`<tr><td class="note" style="font-variant-numeric:tabular-nums">${SIDX[e.sid]}</td><td>${e.b}</td><td><span class="actor-tag" style="--c:${gc(e.a)}">${GN(e.a).short}</span></td>
+    <td><b style="font-variant-numeric:tabular-nums">${e.std}</b> ${SN(e.std).n}<div style="margin-top:4px"><span class="pill ${e.r==="+"?"a":"n"}">${relTxt(e.r)}</span></div></td><td class="note">${e.why}</td></tr>`).join("");
+  let rowsB="";
+  GROUPS.forEach(g=>{rowsB+=`<tr class="sec" style="--c:${gc(g.k)}"><td colspan="3">${g.name}</td></tr>`;
+    STD.filter(x=>x.g===g.k).forEach(x=>{const kv=KEYV[x.id];const ev=EXP.filter(e=>e.std===x.id).map(e=>SIDX[e.sid]);
+      rowsB+=`<tr><td><b style="font-variant-numeric:tabular-nums">${x.id}</b> ${x.n}<div class="note">الجملة ${ev.join("، ")}</div></td><td><span class="pill ${kv}">${LBL[kv]}</span></td><td class="note">${x.fix||"—"}</td></tr>`})});
+  const na=Object.values(KEYV).filter(v=>v==="a").length;
+  return `<div class="stats"><div class="stat"><div class="v">${EXP.length}</div><div class="k">سلوكًا في المفتاح</div></div><div class="stat"><div class="v" style="color:var(--ok)">${na}</div><div class="k">معيارًا مطبقًا</div></div><div class="stat"><div class="v" style="color:var(--bad)">${26-na}</div><div class="k">معايير غير مطبقة</div></div><div class="stat"><div class="v">4، 10</div><div class="k">جملتان سياقيتان لا تحملان سلوكًا</div></div></div>
+  <div style="display:flex;flex-direction:column;gap:10px"><h3 style="font-size:1.05rem">أولًا: السلوكيات وربطها</h3>
+  <div class="tbl-wrap"><table class="keytbl"><thead><tr><th>الجملة</th><th>السلوك</th><th>الفاعل</th><th>المعيار والعلاقة</th><th style="width:30%">التعليل</th></tr></thead><tbody>${rows}</tbody></table></div></div>
+  <div style="display:flex;flex-direction:column;gap:10px"><h3 style="font-size:1.05rem">ثانيًا: الحكم على المعايير</h3>
+  <div class="tbl-wrap"><table class="keytbl" style="min-width:560px"><thead><tr><th>المعيار والشواهد</th><th>الحكم</th><th>مقترح إعادة الهندسة</th></tr></thead><tbody>${rowsB}</tbody></table></div></div>`;
+}
+const ACT=Object.fromEntries(GROUPS.map(g=>[g.short,g.k]));
+function parseReport(txt){
+  const who=(txt.match(/المشارك\/المجموعة:\s*(.+)/)||[])[1]||"مجموعة دون اسم";
+  const bs=[];
+  txt.split(/\r?\n/).forEach(l=>{const m=l.match(/^\s*\d+\)\s*\[الجملة\s*(\d+)\]\s*\[([^\]]+)\]\s*(.*?)\s*←\s*(\d\.\d)?[^(]*\((يحقق|يُخلّ|—)\)\s*$/);
+    if(!m)return;const sid="s"+m[1];if(!SENT[sid])return;
+    bs.push({sid,a:ACT[m[2].trim()]||"",t:m[3],std:m[4]||"",r:m[5]==="يحقق"?"+":m[5]==="يُخلّ"?"-":""})});
+  return {who:who.trim(),bs};
+}
+let fview="key",pasted=null,pasteText="";
+function renderCompare(){
+  const v=$("#v-compare");
+  if(MODE!=="fac"){v.innerHTML="";return}
+  const tabs=`<div class="switch" role="group" aria-label="طريقة العرض">${[["key","عرض المفتاح"],["paste","مقارنة تقرير مجموعة"],["local","تحليل هذا الجهاز"]].map(([k,t])=>`<button data-fv="${k}" aria-pressed="${fview===k}">${t}</button>`).join("")}</div>`;
+  let body="";
+  if(fview==="key")body=`<p class="lead">اعرض هذه الصفحة على الشاشة بعد أن تنهي المجموعات الربط. الأسهل أن تبدأ بالجدول الثاني (الحكم على المعايير)، ثم تعود إلى السلوكيات التي اختلفت فيها المجموعات.</p>`+keyHTML();
+  else if(fview==="paste"){
+    body=`<div class="panel" style="display:flex;flex-direction:column;gap:10px"><label class="field" for="pasteBox"><span>الصق هنا التقرير الذي نسخته المجموعة من زر «نسخ التقرير الكامل»</span><textarea id="pasteBox" rows="6">${esc(pasteText)}</textarea></label><div class="row"><button class="btn" id="parseBtn">قارن التقرير بالمفتاح</button><span class="note" id="parseMsg"></span></div></div>`;
+    if(pasted)body+=pasted.bs.length?`<h3 style="font-size:1.15rem">${esc(pasted.who)} · ${pasted.bs.length} سلوكًا</h3>`+compareHTML(pasted.bs):`<div class="empty">لم يُعثر في النص على سلوكيات بالصيغة المتوقعة. تأكد من لصق التقرير كاملًا كما نسخته المجموعة.</div>`;
+  } else body=st.bs.length?compareHTML(st.bs):`<div class="empty">لا يوجد تحليل محفوظ على هذا الجهاز.</div>`;
+  v.innerHTML=`<div class="row" style="justify-content:space-between"><div><span class="eyebrow">نسخة الميسّر</span><h2 style="font-size:1.3rem">مفتاح الخبير</h2></div>${tabs}</div>`+body;
+}
+document.addEventListener("click",e=>{
+  const fb=e.target.closest("[data-fv]");if(fb){fview=fb.dataset.fv;renderCompare();return}
+  if(e.target.id==="parseBtn"){pasteText=$("#pasteBox").value;pasted=parseReport(pasteText);renderCompare()}
+});
+document.addEventListener("input",e=>{if(e.target.id==="pasteBox")pasteText=e.target.value});
+
+function renderLists(){
+  const get=x=>listSrc==="key"?KEYV[x.id]:myVerdict(x.id);
+  if(false){$("#lists").innerHTML=`<div class="panel note">تظهر قائمة المفتاح بعد اكتمال الربط أو فتح المفتاح من صفحة المقارنة.</div>`;return}
+  $("#lists").innerHTML=[{s:"a",t:"معايير مطبقة",c:"ok"},{s:"n",t:"معايير غير مطبقة",c:"bad"}].map(c=>{const items=STD.filter(x=>get(x)===c.s);
+    return `<div class="col" style="--c:var(--${c.c})"><h3><span>${c.t}</span><span style="font-variant-numeric:tabular-nums">${items.length}</span></h3><ul>${items.map(x=>`<li><span class="c">${x.id}</span><span>${x.n} <span class="note">· ${GN(x.g).name}</span></span></li>`).join("")||`<li class="note">لا يوجد</li>`}</ul></div>`}).join("");
+}
+document.querySelectorAll(".switch button").forEach(b=>b.addEventListener("click",()=>{listSrc=b.dataset.src;document.querySelectorAll(".switch button").forEach(x=>x.setAttribute("aria-pressed",x===b));renderLists()}));
+["r1","r2","r3"].forEach(k=>{const el=$("#"+k);el.value=st.refl[k]||"";el.addEventListener("input",()=>{st.refl[k]=el.value;save()})});
+
+function report(){
+  const L=["تقرير تحليل حكاية صفية وفق معايير ISTE","المشارك/المجموعة: "+(st.who||"—"),"الحكاية: «الكتاب الناطق: أصحاب المهن في حيّنا» — الصف الأول، الاجتماعيات","","■ السلوكيات المستخرجة وربطها:"];
+  st.bs.forEach((b,i)=>L.push(`${i+1}) [الجملة ${SIDX[b.sid]}] [${b.a?GN(b.a).short:"—"}] ${b.t||SENT[b.sid]} ← ${b.std?b.std+" "+SN(b.std).n:"—"} (${b.r==="+"?"يحقق":b.r==="-"?"يُخلّ":"—"})`));
+  L.push("");
+  ["a","n"].forEach(s=>{const it=STD.filter(x=>myVerdict(x.id)===s);L.push(`■ ${LBL[s]} (${it.length}): `+(it.map(x=>x.id+" "+x.n).join("، ")||"—"))});
+  const agree=STD.filter(x=>myVerdict(x.id)===KEYV[x.id]).length;
+  if(EXP.length)L.push("","اتفاق الحكم مع مفتاح الخبير: "+agree+" من 26");L.push("","■ إعادة الهندسة والتأمل:","1) "+(st.refl.r1||"—"),"2) "+(st.refl.r2||"—"),"3) "+(st.refl.r3||"—"));
+  return L.join("\n");
+}
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,2400)}
+function fallback(txt){const ta=document.createElement("textarea");ta.value=txt;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand("copy")}catch(e){}ta.remove();toast(ok?"نُسخ التقرير":"تعذّر النسخ التلقائي")}
+$("#copyReport").addEventListener("click",()=>{const txt=report();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(()=>toast("نُسخ التقرير"),()=>fallback(txt))}else fallback(txt)});
+$("#resetAll").addEventListener("click",()=>{$("#resetConfirm").hidden=false});
+$("#resetYes").addEventListener("click",()=>{st={who:st.who,bs:[],refl:{r1:"",r2:"",r3:""},force:false,seq:0};save();["r1","r2","r3"].forEach(k=>$("#"+k).value="");$("#resetConfirm").hidden=true;go("extract");toast("بدأ تحليل جديد")});
+
+$("#who").value=st.who||"";$("#who").addEventListener("input",e=>{st.who=e.target.value;save()});
+
+function go(tab){
+  if(sheetId){sheetId=null;$("#sheet").hidden=true}
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));
+  document.querySelectorAll("section.view").forEach(s=>s.hidden=s.id!=="v-"+tab);
+  if(tab==="extract"){renderEx();markStory()}
+  if(tab==="link")renderLink();
+  if(tab==="compare")renderCompare();
+  if(tab==="summary")renderLists();
+  window.scrollTo({top:0});
+}
+document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.tab)));
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+$("#modeBadge").textContent=MODE==="fac"?"نسخة الميسّر":"نسخة الطلبة";
+let tn=0;document.querySelectorAll("nav.tabs button").forEach(b=>{if(getComputedStyle(b).display!=="none")b.querySelector(".n").textContent=++tn});
+renderEx();markStory();renderBoard();
+</script>
+
+</body>
+</html>
