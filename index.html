@@ -33,6 +33,7 @@
   --ok-bg:#16301f; --bad-bg:#3a1719; --warn-bg:#33280f; --hl:#3b3416; --hl-line:#8c7424; color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:13;background:var(--bg)}
 body{margin:0}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15.5px;line-height:1.75;direction:rtl}
 h1,h2,h3,h4{font-family:var(--f-display);line-height:1.45;margin:0;text-wrap:balance}
@@ -93,7 +94,7 @@ ul.clean li{margin:4px 0}
 .story-title{font-family:var(--f-display);font-size:1.4rem}
 .sent{border-radius:4px;transition:background .2s;padding:1px 0}
 .picking .sent{cursor:pointer}
-.picking .sent:hover{background:var(--sunk);box-shadow:inset 0 -2px 0 var(--line)}
+@media (hover:hover){.picking .sent:not(.got):hover{background:var(--sunk)}}
 .sent.got{background:var(--hl);box-shadow:inset 0 -2px 0 var(--hl-line)}
 .sent:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .sent.flash{background:var(--accent);color:var(--accent-ink)}
@@ -173,6 +174,24 @@ details.why div{margin-top:6px;font-size:.87rem;line-height:1.7}
 .sheet .card.act{border-inline-start:0}
 .sheet-grip{width:40px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 10px}
 .mob-hint{display:none}
+.xhead{position:sticky;top:env(safe-area-inset-top,0px);z-index:12;background:var(--bg);padding-block:8px}
+.xhead .xprog{flex-wrap:nowrap;margin:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+#v-extract .story{margin-inline:auto}
+#storyPick .sent.got{background:var(--ok-bg);box-shadow:inset 0 -2px 0 var(--ok)}
+#storyPick .sent.cur{outline:2px solid var(--ok);outline-offset:2px}
+.atag{font-family:var(--f-body);font-size:.72rem;font-weight:600;color:var(--ok);border:1px solid var(--ok);border-radius:20px;padding:0 7px;margin-inline:3px;vertical-align:3px;white-space:nowrap}
+.apanel{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(560px,100%);z-index:30;background:var(--surface);border:1px solid var(--line);border-bottom:0;border-radius:14px 14px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.22);display:flex;flex-direction:column;gap:12px;padding-top:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.apanel .quote{max-height:5.8em;overflow:auto}
+.abtns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.abtns button{border:1px solid var(--line);background:var(--sunk);border-radius:9px;padding:12px 8px;font-size:1rem;font-weight:600;cursor:pointer}
+.abtns button[aria-pressed="true"]{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+.abtns button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.exl{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column}
+.exl li{display:flex;gap:10px;align-items:baseline;padding:7px 0;border-top:1px solid var(--line);font-size:.9rem}
+.exl li:first-child{border-top:0}
+.exl .n{font-variant-numeric:tabular-nums;color:var(--muted);flex:none;width:58px}
+.exl .t{flex:1;min-width:0;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.exl button{border:0;background:none;color:var(--muted);cursor:pointer;font-size:.85rem;text-decoration:underline}
 .sent.got.full{background:var(--ok-bg);box-shadow:inset 0 -2px 0 var(--ok)}
 .sent.got.part{background:var(--warn-bg);box-shadow:inset 0 -2px 0 var(--warn)}
 .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.82rem;color:var(--muted);align-items:center}
@@ -187,7 +206,7 @@ details.why div{margin-top:6px;font-size:.87rem;line-height:1.7}
 .stx.ok{background:var(--ok-bg);color:var(--ok)}.stx.no{background:var(--warn-bg);color:var(--warn)}
 .card.pending{box-shadow:0 0 0 2px var(--warn-bg)}
 .xprog{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:6px}
-.xprog .bar{flex:1;min-width:140px;height:8px;background:var(--sunk);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.xprog .bar{flex:1;min-width:50px;height:8px;background:var(--sunk);border:1px solid var(--line);border-radius:5px;overflow:hidden}
 .xprog .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
 .xprog b{font-variant-numeric:tabular-nums;font-weight:600}
 @media (max-width:980px){.mob-hint{display:block}}
@@ -244,7 +263,7 @@ details.why div{margin-top:6px;font-size:.87rem;line-height:1.7}
       <ol class="flow" style="margin-top:8px">
         <li><span class="t">10 د</span><div><b>تهيئة واستدعاء الإطار</b><span>الأطراف الأربعة، والفرق بين المعيار والهدف.</span></div></li>
         <li><span class="t">10 د</span><div><b>قراءة الحكاية</b><span>قراءة فردية متصلة دون تحليل.</span></div></li>
-        <li><span class="t">25 د</span><div><b>استخراج السلوكيات</b><span>استخراج 27 سلوكًا وتحديد فاعل كل منها، شرطًا للانتقال إلى الربط.</span></div></li>
+        <li><span class="t">25 د</span><div><b>استخراج السلوكيات</b><span>لمس الجملة واختيار فاعلها، حتى استخراج 27 سلوكًا، شرطًا للانتقال إلى الربط.</span></div></li>
         <li><span class="t">20 د</span><div><b>الربط بالمعايير</b><span>ربط كل سلوك مستخرج بمعيار تابع لفاعله، ومتابعة لوحة المعايير.</span></div></li>
         <li><span class="t">15 د</span><div><b>المقارنة بمفتاح الخبير</b><span>مناقشة السلوكيات الفائتة والروابط المختلفة.</span></div></li>
         <li><span class="t">10 د</span><div><b>إعادة الهندسة والتأمل</b><span>إعادة كتابة ممارسة ضعيفة في الحكاية لتقترب من معيارها.</span></div></li>
@@ -275,20 +294,14 @@ details.why div{margin-top:6px;font-size:.87rem;line-height:1.7}
 </section>
 
 <section class="view" id="v-extract" hidden>
-  <div class="panel" style="padding:16px 18px;display:flex;flex-direction:column;gap:6px">
-    <div class="xprog" role="status" aria-live="polite"><span>استخرجت <b class="xN">0</b> من <b>27</b> سلوكًا متوقعًا</span><div class="bar" aria-hidden="true"><i class="xBar"></i></div></div>
-    <strong style="font-family:var(--f-display);margin-top:6px">كيف تستخرج السلوك؟</strong>
-    <p class="note" style="margin:0">انقر على أي جملة تتضمن سلوكًا أو إجراءً قام به أحد الأطراف، فتنتقل إلى قائمتك، ثم حدّد الفاعل الذي قام بالسلوك. ليست كل جملة سلوكًا؛ بعض الجمل سردٌ للسياق فقط. ويمكن أن تحمل جملة واحدة أكثر من سلوك.</p>
-    <p class="note mob-hint" style="margin:0"><b>على الهاتف:</b> المس الجملة فتظهر نافذة سفلية لتحديد الفاعل، ثم اضغط «تم» لتعود إلى موضعك في الحكاية. تجد قائمة سلوكياتك كاملة أسفل الحكاية.</p>
+  <div class="xhead">
+    <div class="xprog" role="status" aria-live="polite"><span>استخرجت <b class="xN">0</b> من <b>27</b> سلوكًا</span><div class="bar" aria-hidden="true"><i class="xBar"></i></div><button class="btn small" data-go="link" id="toLink" style="white-space:nowrap">الربط ←</button></div>
   </div>
-  <div class="work">
-    <div class="panel" style="display:flex;flex-direction:column;gap:12px"><div class="legend" aria-label="دليل الألوان"><span><i style="background:var(--ok-bg);box-shadow:inset 0 -2px 0 var(--ok)"></i>سلوك محدّد الفاعل</span><span><i style="background:var(--warn-bg);box-shadow:inset 0 -2px 0 var(--warn)"></i>سلوك دون فاعل</span><span><i style="background:var(--sunk);border:1px solid var(--line)"></i>جملة لم تُستخرج</span></div><div class="story picking" id="storyPick"></div></div>
-    <div class="sticky" style="display:flex;flex-direction:column;gap:10px">
-      <h3 style="font-size:1rem">استخرجت <span class="count" id="exCount">0</span> من 27 سلوكًا متوقعًا</h3>
-      <div class="todo" id="exTodo"></div>
-      <div id="exList" style="display:flex;flex-direction:column;gap:10px"></div>
-    </div>
+  <div class="panel" style="display:flex;flex-direction:column;gap:14px">
+    <p class="note" style="margin:0;color:var(--ink)"><b>المس الجملة التي تتضمن سلوكًا، ثم اختر من قام به.</b> تصبح الجملة خضراء ويظهر اسم الفاعل بجانبها. ليست كل جملة سلوكًا. لإلغاء الاختيار أو لإضافة فاعل ثانٍ للجملة نفسها، المسها مرة أخرى.</p>
+    <div class="story picking" id="storyPick"></div>
   </div>
+  <details class="panel" id="exListWrap" style="padding:16px 18px"><summary style="cursor:pointer;font-weight:600">مراجعة ما استخرجته (<span id="exCount">0</span>)</summary><ul class="exl" id="exList"></ul></details>
   <div class="panel row" style="justify-content:space-between;padding:14px 18px"><span class="note" id="exReady"></span><button class="btn" data-go="link">انتقل إلى الربط بالمعايير</button></div>
 </section>
 
@@ -338,10 +351,11 @@ details.why div{margin-top:6px;font-size:.87rem;line-height:1.7}
 </section>
 
 </div></main>
-<div class="sheet" id="sheet" hidden role="dialog" aria-label="تحرير السلوك المستخرج">
-  <div class="sheet-grip" aria-hidden="true"></div>
-  <div class="sheet-head"><strong style="font-family:var(--f-display)">سلوك مستخرج</strong><button class="btn small" id="sheetDone">تم، عودة إلى الحكاية</button></div>
-  <div id="sheetBody"></div>
+<div class="apanel" id="apanel" hidden role="dialog" aria-label="اختيار الفاعل">
+  <p class="quote" id="apQuote"></p>
+  <strong style="font-family:var(--f-display)">من قام بهذا السلوك؟</strong>
+  <div class="abtns" id="apBtns"></div>
+  <div class="row" style="justify-content:space-between"><button class="btn ghost small" id="apClear">إلغاء اختيار الجملة</button><button class="btn small" id="apDone">تم</button></div>
 </div>
 <div class="toast" id="toast" hidden></div>
 
@@ -467,82 +481,52 @@ const nB=n=>n===1?"سلوك واحد":n===2?"سلوكين":n<=10?`${n} سلوك�
 function exMissing(){const x=exStat(),p=[];if(x.n<EXPECTED){const k=EXPECTED-x.n;p.push(`استخراج ${k===1?"سلوك واحد إضافي":k===2?"سلوكين إضافيين":k<=10?k+" سلوكيات إضافية":k+" سلوكًا إضافيًا"}`)}if(x.noA)p.push(`تحديد الفاعل في ${nB(x.noA)}`);return p.join("، و")}
 const unlockMsg=()=>"يمكنك الآن فتح مفتاح الخبير.";
 
-function storyHTML(pick){return STORY.map(p=>`<p>${p.map(([id,t])=>`<span class="sent" data-sid="${id}"${pick?` tabindex="0" role="button" aria-label="استخراج سلوك من الجملة ${SIDX[id]}"`:""}>${t}</span>`).join(" ")}</p>`).join("")}
+function storyHTML(pick){return STORY.map(p=>`<p>${p.map(([id,t])=>`<span class="sent" data-sid="${id}"${pick?` tabindex="0" role="button" aria-label="الجملة ${SIDX[id]}: اختيار الفاعل"`:""}>${t}</span>${pick?`<span class="atags" data-for="${id}"></span>`:""}`).join(" ")}</p>`).join("")}
 $("#storyRead").innerHTML=storyHTML(false);
 $("#storyPick").innerHTML=storyHTML(true);
-const bDone=b=>!!b.a;
-function bLack(b){const p=[];if(!b.a)p.push("الفاعل");return p}
-function stxHTML(b){return bDone(b)?`<span class="stx ok">مكتمل</span>`:`<span class="stx no">ينقصه: ${bLack(b).join(" و")}</span>`}
-function markStory(){document.querySelectorAll("#storyPick .sent").forEach(el=>{const bs=st.bs.filter(b=>b.sid===el.dataset.sid);
-  el.classList.toggle("got",bs.length>0);el.classList.toggle("full",bs.length>0&&bs.every(bDone));el.classList.toggle("part",bs.length>0&&!bs.every(bDone))})}
-let exFilter="all",lkFilter="all";
-
-const mqM=matchMedia("(max-width:980px)");
-let sheetId=null,sheetScroll=0;
-function cardHTML(b){return `<article class="card act${bDone(b)?"":" pending"}" data-id="${b.id}" style="--c:${b.a?gc(b.a):"var(--line)"}">
-    <div class="row" style="justify-content:space-between;align-items:flex-start;flex-wrap:nowrap"><span class="note" style="font-variant-numeric:tabular-nums">الجملة ${SIDX[b.sid]}</span><span class="stxw">${stxHTML(b)}</span></div>
-    <p class="quote">${SENT[b.sid]}</p>
-    <div class="field"><span>الفاعل</span><div class="seg" role="group" aria-label="الفاعل">${GROUPS.map(g=>`<button data-a="${g.k}" aria-pressed="${b.a===g.k}">${g.short}</button>`).join("")}</div></div>
-    <div class="row" style="justify-content:space-between"><button class="btn ghost small" data-act="dup">سلوك آخر من الجملة نفسها</button><button class="btn ghost small" data-act="del">حذف</button></div>
-  </article>`}
-function openSheet(id){sheetId=id;sheetScroll=window.scrollY;renderSheet();$("#sheet").hidden=false}
-function closeSheet(){sheetId=null;$("#sheet").hidden=true;renderEx();window.scrollTo({top:sheetScroll})}
-function renderSheet(){const b=st.bs.find(x=>x.id===sheetId);if(!b){closeSheet();return}$("#sheetBody").innerHTML=cardHTML(b)}
-$("#sheetDone").addEventListener("click",closeSheet);
-function addB(sid){const b={id:"b"+(++st.seq),sid,a:"",t:"",std:"",r:""};st.bs.push(b);st.bs.sort((x,y)=>SIDX[x.sid]-SIDX[y.sid]);save();renderEx();markStory();
-  if(mqM.matches){openSheet(b.id);return}
-  const el=document.querySelector(`#exList [data-id="${b.id}"]`);if(el){el.scrollIntoView({block:"nearest"});el.querySelector(".seg button").focus({preventScroll:true})}}
-function pick(el){const sid=el.dataset.sid;const ex=st.bs.find(b=>b.sid===sid);
-  if(ex){if(mqM.matches){openSheet(ex.id);return}
-    const c=document.querySelector(`#exList [data-id="${ex.id}"]`);if(c){c.scrollIntoView({block:"nearest"});c.querySelector(".seg button").focus({preventScroll:true})}return}
-  addB(sid)}
-$("#storyPick").addEventListener("click",e=>{const el=e.target.closest(".sent");if(el)pick(el)});
-$("#storyPick").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.classList.contains("sent")){e.preventDefault();pick(e.target)}});
+let lkFilter="all",apSid=null;
+function markStory(){document.querySelectorAll("#storyPick .sent").forEach(el=>{const sid=el.dataset.sid;const bs=st.bs.filter(b=>b.sid===sid);
+  el.classList.toggle("got",bs.length>0);el.classList.toggle("cur",sid===apSid);
+  const t=document.querySelector(`#storyPick .atags[data-for="${sid}"]`);if(t)t.innerHTML=bs.map(b=>`<span class="atag">${GN(b.a).short}</span>`).join("")})}
+function renderAP(){
+  const bs=st.bs.filter(b=>b.sid===apSid);
+  $("#apQuote").textContent=SENT[apSid];
+  $("#apBtns").innerHTML=GROUPS.map(g=>`<button data-ap="${g.k}" aria-pressed="${bs.some(b=>b.a===g.k)}">${g.short}</button>`).join("");
+  $("#apClear").hidden=!bs.length;
+}
+function openAP(sid){apSid=sid;renderAP();$("#apanel").hidden=false;markStory();const f=$("#apBtns button");f&&f.focus({preventScroll:true})}
+function closeAP(){const was=apSid;apSid=null;$("#apanel").hidden=true;markStory();const el=was&&document.querySelector(`#storyPick .sent[data-sid="${was}"]`);el&&el.focus({preventScroll:true})}
+function changed(){save();markStory();renderEx()}
+$("#storyPick").addEventListener("click",e=>{const el=e.target.closest(".sent");if(el)openAP(el.dataset.sid)});
+$("#storyPick").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.classList.contains("sent")){e.preventDefault();openAP(e.target.dataset.sid)}});
+$("#apBtns").addEventListener("click",e=>{const btn=e.target.closest("[data-ap]");if(!btn||!apSid)return;const k=btn.dataset.ap;
+  const before=st.bs.filter(b=>b.sid===apSid).length;
+  const ex=st.bs.find(b=>b.sid===apSid&&b.a===k);
+  if(ex)st.bs=st.bs.filter(b=>b!==ex);
+  else{st.bs.push({id:"b"+(++st.seq),sid:apSid,a:k,std:""});st.bs.sort((x,y)=>SIDX[x.sid]-SIDX[y.sid])}
+  changed();
+  if(!before&&!ex){closeAP();return}
+  renderAP()});
+$("#apClear").addEventListener("click",()=>{st.bs=st.bs.filter(b=>b.sid!==apSid);changed();closeAP()});
+$("#apDone").addEventListener("click",closeAP);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&apSid)closeAP()});
 
 function renderEx(){
+  const n=st.bs.length;
   updExReady();
-  $("#exCount").textContent=st.bs.length;
-  document.querySelectorAll(".xN").forEach(e=>e.textContent=st.bs.length);
-  document.querySelectorAll(".xBar").forEach(e=>e.style.width=Math.min(100,st.bs.length/EXPECTED*100)+"%");
-  markStory();renderExTodo();
-  if(!st.bs.length){$("#exList").innerHTML=`<div class="empty">${mqM.matches?"المس":"انقر على"} جملة في الحكاية لاستخراج أول سلوك.</div>`;return}
-  const list=exFilter==="todo"?st.bs.filter(b=>!bDone(b)):st.bs;
-  $("#exList").innerHTML=list.length?list.map(cardHTML).join(""):`<div class="empty">لا توجد سلوكيات ناقصة. كل ما استخرجته مكتمل.</div>`;
+  $("#exCount").textContent=n;
+  document.querySelectorAll(".xN").forEach(e=>e.textContent=n);
+  document.querySelectorAll(".xBar").forEach(e=>e.style.width=Math.min(100,n/EXPECTED*100)+"%");
+  $("#exList").innerHTML=n?st.bs.map(b=>`<li><span class="n">الجملة ${SIDX[b.sid]}</span><span class="atag">${GN(b.a).short}</span><span class="t">${SENT[b.sid]}</span><button data-rm="${b.id}" aria-label="حذف">حذف</button></li>`).join(""):`<li class="note">لم تستخرج أي سلوك بعد.</li>`;
 }
-function renderExTodo(){
-  const n=st.bs.length,inc=st.bs.filter(b=>!bDone(b)).length,left=Math.max(0,EXPECTED-n);
-  const parts=[];if(inc)parts.push(`<b style="color:var(--warn)">${nB(inc)}</b> ${inc===1?"دون فاعل":"دون فاعل"}`);if(left)parts.push(`بقي استخراج <b>${nB(left)}</b> من الحكاية`);
-  $("#exTodo").innerHTML=`<div class="note" style="color:var(--ink)">${parts.length?"المتبقي عليك: "+parts.join("، و")+".":`<b style="color:var(--ok)">اكتمل الاستخراج:</b> ${nB(n)}، كلها مكتملة.`}</div>
-    <div class="row"><div class="chips" role="group" aria-label="عرض السلوكيات"><button data-exf="all" aria-pressed="${exFilter==="all"}">الكل (${n})</button><button data-exf="todo" aria-pressed="${exFilter==="todo"}">الناقصة (${inc})</button></div>
-    ${inc?`<button class="btn ghost small" id="nextInc">انتقل إلى أول سلوك ناقص</button>`:""}</div>`;
-}
-document.addEventListener("click",e=>{
-  const fb=e.target.closest("[data-exf]");if(fb){exFilter=fb.dataset.exf;renderEx();return}
-  if(e.target.id==="nextInc"){const b=st.bs.find(x=>!bDone(x));if(!b)return;
-    const sEl=document.querySelector(`#storyPick .sent[data-sid="${b.sid}"]`);
-    if(mqM.matches){openSheet(b.id);return}
-    sEl&&sEl.scrollIntoView({block:"center"});
-    const c=document.querySelector(`#exList [data-id="${b.id}"]`);if(c){c.scrollIntoView({block:"nearest"});c.querySelector(".seg button").focus({preventScroll:true})}}
-  const lf=e.target.closest("[data-lkf]");if(lf){lkFilter=lf.dataset.lkf;renderLink();return}
-  if(e.target.id==="nextUnl"){const b=st.bs.find(x=>!x.std);if(!b)return;const s=document.getElementById("s-"+b.id);if(s){s.scrollIntoView({block:"center"});s.focus({preventScroll:true})}}
-});
-function onCardClick(e){const c=e.target.closest(".card");if(!c)return;const b=st.bs.find(x=>x.id===c.dataset.id);if(!b)return;
-  const inSheet=!!e.target.closest("#sheet");
-  const ab=e.target.closest(".seg button");if(ab){if(b.a!==ab.dataset.a){b.a=ab.dataset.a;b.std=""}c.style.setProperty("--c",gc(b.a));c.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed",x===ab));save();liveStatus(b);if(!inSheet&&sheetId)renderSheet();return}
-  const act=e.target.closest("[data-act]");if(!act)return;
-  if(act.dataset.act==="del"){st.bs=st.bs.filter(x=>x!==b);save();markStory();if(inSheet){closeSheet()}else renderEx()}
-  if(act.dataset.act==="dup")addB(b.sid);
-}
-function onCardInput(e){if(e.target.tagName!=="TEXTAREA")return;const b=st.bs.find(x=>x.id===e.target.closest(".card").dataset.id);if(b){b.t=e.target.value;save();liveStatus(b)}}
-function liveStatus(b){document.querySelectorAll(`.card[data-id="${b.id}"]`).forEach(c=>{const w=c.querySelector(".stxw");if(w)w.innerHTML=stxHTML(b);c.classList.toggle("pending",!bDone(b))});
-  updExReady();markStory();renderExTodo()}
+$("#exList").addEventListener("click",e=>{const r=e.target.closest("[data-rm]");if(!r)return;st.bs=st.bs.filter(b=>b.id!==r.dataset.rm);changed()});
 function updExReady(){const el=$("#exReady");if(!el)return;
   if(exDone()){el.innerHTML=`<b style="color:var(--ok)">اكتمل الاستخراج.</b> انتقل الآن إلى ربط السلوكيات بالمعايير.`}
   else el.innerHTML=gateOn()?`لا يُفتح الربط قبل اكتمال الاستخراج. المتبقي: ${exMissing()}.`:`المتبقي لاكتمال الاستخراج: ${exMissing()}.`}
-["#exList","#sheetBody"].forEach(sel=>{$(sel).addEventListener("click",onCardClick);$(sel).addEventListener("input",onCardInput)});
-$("#exList").addEventListener("focusin",e=>{const c=e.target.closest(".card");if(!c)return;const b=st.bs.find(x=>x.id===c.dataset.id);
-  document.querySelectorAll("#storyPick .sent").forEach(el=>el.classList.toggle("flash",el.dataset.sid===b.sid))});
-$("#exList").addEventListener("focusout",()=>document.querySelectorAll("#storyPick .flash").forEach(el=>el.classList.remove("flash")));
+document.addEventListener("click",e=>{
+  const lf=e.target.closest("[data-lkf]");if(lf){lkFilter=lf.dataset.lkf;renderLink();return}
+  if(e.target.id==="nextUnl"){const b=st.bs.find(x=>!x.std);if(!b)return;const s=document.getElementById("s-"+b.id);if(s){s.scrollIntoView({block:"center"});s.focus({preventScroll:true})}}
+});
 
 function renderLink(){
   const aside=document.querySelector('#v-link aside');
@@ -707,7 +691,7 @@ $("#resetYes").addEventListener("click",()=>{st={who:st.who,bs:[],refl:{r1:"",r2
 $("#who").value=st.who||"";$("#who").addEventListener("input",e=>{st.who=e.target.value;save()});
 
 function go(tab){
-  if(sheetId){sheetId=null;$("#sheet").hidden=true}
+  if(apSid)closeAP();
   document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));
   document.querySelectorAll("section.view").forEach(s=>s.hidden=s.id!=="v-"+tab);
   if(tab==="extract"){renderEx();markStory()}
