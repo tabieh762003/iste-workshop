@@ -231,8 +231,8 @@ details.why div{margin-top:6px;font-size:.87rem;line-height:1.7}
       <ol class="flow" style="margin-top:8px">
         <li><span class="t">10 د</span><div><b>تهيئة واستدعاء الإطار</b><span>الأطراف الأربعة، والفرق بين المعيار والهدف.</span></div></li>
         <li><span class="t">10 د</span><div><b>قراءة الحكاية</b><span>قراءة فردية متصلة دون تحليل.</span></div></li>
-        <li><span class="t">25 د</span><div><b>استخراج السلوكيات</b><span>النقر على الجمل الدالة، وتحديد الفاعل، والصياغة الإجرائية.</span></div></li>
-        <li><span class="t">20 د</span><div><b>الربط بالمعايير</b><span>ربط كل سلوك بمعيار، ومتابعة لوحة المعايير المتحققة.</span></div></li>
+        <li><span class="t">25 د</span><div><b>استخراج السلوكيات</b><span>استخراج 27 سلوكًا مع الفاعل والصياغة الإجرائية، شرطًا للانتقال إلى الربط.</span></div></li>
+        <li><span class="t">20 د</span><div><b>الربط بالمعايير</b><span>ربط جميع السلوكيات المستخرجة بالمعايير، ومتابعة لوحة المعايير المتحققة.</span></div></li>
         <li><span class="t">15 د</span><div><b>المقارنة بمفتاح الخبير</b><span>مناقشة السلوكيات الفائتة والروابط المختلفة.</span></div></li>
         <li><span class="t">10 د</span><div><b>إعادة الهندسة والتأمل</b><span>إعادة كتابة جملة من الحكاية لتحقيق معيار غائب.</span></div></li>
       </ol>
@@ -275,13 +275,13 @@ details.why div{margin-top:6px;font-size:.87rem;line-height:1.7}
       <div id="exList" style="display:flex;flex-direction:column;gap:10px"></div>
     </div>
   </div>
-  <div class="row"><button class="btn" data-go="link">انتقل إلى الربط بالمعايير</button></div>
+  <div class="panel row" style="justify-content:space-between;padding:14px 18px"><span class="note" id="exReady"></span><button class="btn" data-go="link">انتقل إلى الربط بالمعايير</button></div>
 </section>
 
 <section class="view" id="v-link" hidden>
   <div class="panel" style="padding:16px 18px;display:flex;flex-direction:column;gap:6px">
     <strong style="font-family:var(--f-display)">اربط كل سلوك بمعيار</strong>
-    <p class="note" style="margin:0">اختر المعيار من معايير الطرف الفاعل، ثم حدّد العلاقة: هل يحقق السلوك المعيار أم يُخلّ به؟ يُعدّ المعيار <b>مطبقًا</b> إذا ارتبط به سلوك واحد على الأقل يحققه، وما عدا ذلك <b>غير مطبق</b>. تتحدّث لوحة المعايير مباشرة مع كل ربط.</p>
+    <p class="note" style="margin:0">تظهر هنا جميع السلوكيات التي استخرجتها في المرحلة السابقة. لكل سلوك، اختر المعيار من معايير الطرف الفاعل، ثم حدّد العلاقة: هل يحقق السلوك المعيار أم يُخلّ به؟ يُعدّ المعيار <b>مطبقًا</b> إذا ارتبط به سلوك واحد على الأقل يحققه، وما عدا ذلك <b>غير مطبق</b>. تتحدّث لوحة المعايير مباشرة مع كل ربط.</p>
   </div>
   <div class="work">
     <div id="lkList" style="display:flex;flex-direction:column;gap:10px;min-width:0"></div>
@@ -448,10 +448,15 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const gc=k=>`var(--${k})`;
 let listSrc="mine";
-const MINB=10;
+const EXPECTED=27;
 const isReady=()=>st.bs.length>0&&st.bs.every(b=>b.a&&b.std&&b.r);
-const canSee=()=>MODE==="fac"||(isReady()&&st.bs.length>=MINB);
-const unlockMsg=()=>canSee()?"يمكنك الآن فتح مفتاح الخبير.":`استخرج ${MINB} سلوكيات على الأقل واربطها جميعًا لفتح مفتاح الخبير (لديك ${st.bs.length}).`;
+const exStat=()=>({n:st.bs.length,noA:st.bs.filter(b=>!b.a).length,noT:st.bs.filter(b=>!(b.t||"").trim()).length});
+const exDone=()=>{const x=exStat();return x.n>=EXPECTED&&!x.noA&&!x.noT};
+const gateOn=()=>MODE==="stu";
+const canSee=()=>MODE==="fac"||(exDone()&&isReady());
+const nB=n=>n===1?"سلوك واحد":n===2?"سلوكين":n<=10?`${n} سلوكيات`:`${n} سلوكًا`;
+function exMissing(){const x=exStat(),p=[];if(x.n<EXPECTED){const k=EXPECTED-x.n;p.push(`استخراج ${k===1?"سلوك واحد إضافي":k===2?"سلوكين إضافيين":k<=10?k+" سلوكيات إضافية":k+" سلوكًا إضافيًا"}`)}if(x.noA)p.push(`تحديد الفاعل في ${nB(x.noA)}`);if(x.noT)p.push(`كتابة الصياغة الإجرائية في ${nB(x.noT)}`);return p.join("، و")}
+const unlockMsg=()=>"يمكنك الآن فتح مفتاح الخبير.";
 
 function storyHTML(pick){return STORY.map(p=>`<p>${p.map(([id,t])=>`<span class="sent" data-sid="${id}"${pick?` tabindex="0" role="button" aria-label="استخراج سلوك من الجملة ${SIDX[id]}"`:""}>${t}</span>`).join(" ")}</p>`).join("")}
 $("#storyRead").innerHTML=storyHTML(false);
@@ -480,8 +485,8 @@ function pick(el){const sid=el.dataset.sid;const ex=st.bs.find(b=>b.sid===sid);
 $("#storyPick").addEventListener("click",e=>{const el=e.target.closest(".sent");if(el)pick(el)});
 $("#storyPick").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.classList.contains("sent")){e.preventDefault();pick(e.target)}});
 
-const EXPECTED=27;
 function renderEx(){
+  updExReady();
   $("#exCount").textContent=st.bs.length;
   document.querySelectorAll(".xN").forEach(e=>e.textContent=st.bs.length);
   document.querySelectorAll(".xBar").forEach(e=>e.style.width=Math.min(100,st.bs.length/EXPECTED*100)+"%");
@@ -490,18 +495,29 @@ function renderEx(){
 }
 function onCardClick(e){const c=e.target.closest(".card");if(!c)return;const b=st.bs.find(x=>x.id===c.dataset.id);if(!b)return;
   const inSheet=!!e.target.closest("#sheet");
-  const ab=e.target.closest(".seg button");if(ab){if(b.a!==ab.dataset.a){b.a=ab.dataset.a;b.std=""}c.style.setProperty("--c",gc(b.a));c.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed",x===ab));save();if(!inSheet&&sheetId)renderSheet();return}
+  const ab=e.target.closest(".seg button");if(ab){if(b.a!==ab.dataset.a){b.a=ab.dataset.a;b.std=""}c.style.setProperty("--c",gc(b.a));c.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed",x===ab));save();updExReady();if(!inSheet&&sheetId)renderSheet();return}
   const act=e.target.closest("[data-act]");if(!act)return;
   if(act.dataset.act==="del"){st.bs=st.bs.filter(x=>x!==b);save();markStory();if(inSheet){closeSheet()}else renderEx()}
   if(act.dataset.act==="dup")addB(b.sid);
 }
-function onCardInput(e){if(e.target.tagName!=="TEXTAREA")return;const b=st.bs.find(x=>x.id===e.target.closest(".card").dataset.id);if(b){b.t=e.target.value;save()}}
+function onCardInput(e){if(e.target.tagName!=="TEXTAREA")return;const b=st.bs.find(x=>x.id===e.target.closest(".card").dataset.id);if(b){b.t=e.target.value;save();updExReady()}}
+function updExReady(){const el=$("#exReady");if(!el)return;
+  if(exDone()){el.innerHTML=`<b style="color:var(--ok)">اكتمل الاستخراج.</b> انتقل الآن إلى ربط السلوكيات بالمعايير.`}
+  else el.innerHTML=gateOn()?`لا يُفتح الربط قبل اكتمال الاستخراج. المتبقي: ${exMissing()}.`:`المتبقي لاكتمال الاستخراج: ${exMissing()}.`}
 ["#exList","#sheetBody"].forEach(sel=>{$(sel).addEventListener("click",onCardClick);$(sel).addEventListener("input",onCardInput)});
 $("#exList").addEventListener("focusin",e=>{const c=e.target.closest(".card");if(!c)return;const b=st.bs.find(x=>x.id===c.dataset.id);
   document.querySelectorAll("#storyPick .sent").forEach(el=>el.classList.toggle("flash",el.dataset.sid===b.sid))});
 $("#exList").addEventListener("focusout",()=>document.querySelectorAll("#storyPick .flash").forEach(el=>el.classList.remove("flash")));
 
 function renderLink(){
+  const aside=document.querySelector('#v-link aside');
+  if(gateOn()&&!exDone()){
+    const x=exStat();aside.hidden=true;
+    $("#lkList").innerHTML=`<div class="panel locked"><h2>أكمل استخراج السلوكيات أولًا</h2><p class="lead" style="margin:0 auto 14px">تبدأ مرحلة الربط بعد أن تستخرج ${EXPECTED} سلوكًا من الحكاية، وتحدد لكل سلوك فاعله وتكتب صياغته الإجرائية.</p>
+      <div class="stats" style="max-width:640px;margin:0 auto 16px"><div class="stat"><div class="v">${x.n}/${EXPECTED}</div><div class="k">سلوكيات مستخرجة</div></div><div class="stat"><div class="v">${x.noA}</div><div class="k">دون فاعل</div></div><div class="stat"><div class="v">${x.noT}</div><div class="k">دون صياغة إجرائية</div></div></div>
+      <div class="row" style="justify-content:center"><button class="btn" data-go="extract">العودة إلى الاستخراج</button></div></div>`;
+    $("#readyMsg").textContent="";return}
+  aside.hidden=false;
   if(!st.bs.length){$("#lkList").innerHTML=`<div class="empty">لا توجد سلوكيات بعد. ابدأ من مرحلة الاستخراج.<div style="margin-top:10px"><button class="btn small" data-go="extract">الذهاب إلى الاستخراج</button></div></div>`;renderBoard();return}
   $("#lkList").innerHTML=st.bs.map(b=>{
     const g=b.a?GN(b.a):null;
@@ -608,7 +624,7 @@ function renderCompare(){
   if(MODE!=="fac"){
     if(!canSee()){
       const pend=st.bs.filter(b=>!b.a||!b.std||!b.r).length;
-      v.innerHTML=`<div class="panel locked"><h2>مفتاح الخبير يُفتح بعد أن تُكمل تحليلك</h2><p class="lead" style="margin:0 auto 16px">شرط الفتح: ${MINB} سلوكيات مستخرجة على الأقل، وكل سلوك مرتبط بفاعل ومعيار وعلاقة. لديك الآن ${st.bs.length} سلوكًا${pend?`، منها ${pend} دون ربط كامل`:""}. هذا الشرط يضمن أن تحكم بنفسك أولًا، ثم تتحقق.</p><div class="row" style="justify-content:center"><button class="btn" data-go="${st.bs.length<MINB?"extract":"link"}">${st.bs.length<MINB?"العودة إلى الاستخراج":"العودة إلى الربط"}</button></div></div>`;
+      v.innerHTML=`<div class="panel locked"><h2>مفتاح الخبير يُفتح بعد أن تُكمل تحليلك</h2><p class="lead" style="margin:0 auto 16px">${exDone()?`اكتمل الاستخراج، وبقي ${nB(pend)} دون ربط كامل بمعيار وعلاقة.`:`لم يكتمل الاستخراج بعد. المتبقي: ${exMissing()}.`} هذا الشرط يضمن أن تحكم بنفسك أولًا، ثم تتحقق.</p><div class="row" style="justify-content:center"><button class="btn" data-go="${exDone()?"link":"extract"}">${exDone()?"العودة إلى الربط":"العودة إلى الاستخراج"}</button></div></div>`;
       return}
     if(!st.saw){st.saw=true;save()}
     v.innerHTML=`<div><span class="eyebrow">التحقق الذاتي</span><h2 style="font-size:1.3rem">تحليلك في مقابل مفتاح الخبير</h2></div>
