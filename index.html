@@ -173,6 +173,10 @@ details.why div{margin-top:6px;font-size:.87rem;line-height:1.7}
 .sheet .card.act{border-inline-start:0}
 .sheet-grip{width:40px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 10px}
 .mob-hint{display:none}
+.xprog{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:6px}
+.xprog .bar{flex:1;min-width:140px;height:8px;background:var(--sunk);border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.xprog .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.xprog b{font-variant-numeric:tabular-nums;font-weight:600}
 @media (max-width:980px){.mob-hint{display:block}}
 @media (max-width:980px){.work{grid-template-columns:minmax(0,1fr)}.sticky{position:static;max-height:none}}
 @media (max-width:520px){ol.flow li{grid-template-columns:52px 1fr}.who input{width:150px}.story{font-size:1.08rem}}
@@ -259,14 +263,15 @@ details.why div{margin-top:6px;font-size:.87rem;line-height:1.7}
 
 <section class="view" id="v-extract" hidden>
   <div class="panel" style="padding:16px 18px;display:flex;flex-direction:column;gap:6px">
-    <strong style="font-family:var(--f-display)">كيف تستخرج السلوك؟</strong>
+    <div class="xprog" role="status" aria-live="polite"><span>استخرجت <b class="xN">0</b> من <b>27</b> سلوكًا متوقعًا</span><div class="bar" aria-hidden="true"><i class="xBar"></i></div></div>
+    <strong style="font-family:var(--f-display);margin-top:6px">كيف تستخرج السلوك؟</strong>
     <p class="note" style="margin:0">انقر على أي جملة تتضمن سلوكًا أو إجراءً قام به أحد الأطراف، فتنتقل إلى قائمتك. حدّد الفاعل، ثم أعد صياغة السلوك بفعل ماضٍ إجرائي قابل للملاحظة (مثال من خارج الحكاية: «نظّم المعلم زيارة ميدانية للمكتبة العامة»). ليست كل جملة سلوكًا؛ بعض الجمل سردٌ للسياق فقط. ويمكن أن تحمل جملة واحدة أكثر من سلوك.</p>
     <p class="note mob-hint" style="margin:0"><b>على الهاتف:</b> المس الجملة فتظهر نافذة سفلية لتحديد الفاعل والصياغة، ثم اضغط «تم» لتعود إلى موضعك في الحكاية. تجد قائمة سلوكياتك كاملة أسفل الحكاية.</p>
   </div>
   <div class="work">
     <div class="panel"><div class="story picking" id="storyPick"></div></div>
     <div class="sticky" style="display:flex;flex-direction:column;gap:10px">
-      <h3 style="font-size:1rem">السلوكيات المستخرجة <span class="count" id="exCount">0</span></h3>
+      <h3 style="font-size:1rem">استخرجت <span class="count" id="exCount">0</span> من 27 سلوكًا متوقعًا</h3>
       <div id="exList" style="display:flex;flex-direction:column;gap:10px"></div>
     </div>
   </div>
@@ -475,8 +480,11 @@ function pick(el){const sid=el.dataset.sid;const ex=st.bs.find(b=>b.sid===sid);
 $("#storyPick").addEventListener("click",e=>{const el=e.target.closest(".sent");if(el)pick(el)});
 $("#storyPick").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.classList.contains("sent")){e.preventDefault();pick(e.target)}});
 
+const EXPECTED=27;
 function renderEx(){
   $("#exCount").textContent=st.bs.length;
+  document.querySelectorAll(".xN").forEach(e=>e.textContent=st.bs.length);
+  document.querySelectorAll(".xBar").forEach(e=>e.style.width=Math.min(100,st.bs.length/EXPECTED*100)+"%");
   if(!st.bs.length){$("#exList").innerHTML=`<div class="empty">${mqM.matches?"المس":"انقر على"} جملة في الحكاية لاستخراج أول سلوك.</div>`;return}
   $("#exList").innerHTML=st.bs.map(cardHTML).join("");
 }
