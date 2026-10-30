@@ -426,7 +426,7 @@ const GROUPS=[
  {k:"led",name:"قائد التعليم",short:"المديرة"},
  {k:"coa",name:"المدرب الداعم",short:"المدرب"}
 ];
-const GN=k=>GROUPS.find(g=>g.k===k);
+const GN=k=>GROUPS.find(g=>g.k===k)||{k:"",name:"—",short:"—"};
 
 const MODE="stu";
 document.documentElement.dataset.mode=MODE;
@@ -494,6 +494,8 @@ const SN=id=>STD.find(x=>x.id===id);
 const KEY="iste-lab-v4-"+MODE;
 let st={who:"",bs:[],refl:{r1:"",r2:"",r3:""},force:false,seq:0};
 try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s)st=Object.assign(st,s)}catch(e){}
+/* data saved by earlier versions may hold behaviours with no actor or an unknown sentence; drop them */
+st.bs=(Array.isArray(st.bs)?st.bs:[]).filter(b=>b&&SENT[b.sid]&&["stu","edu","led","coa"].includes(b.a));
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
