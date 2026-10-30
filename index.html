@@ -216,7 +216,7 @@ details.why div{margin-top:6px;font-size:.87rem;line-height:1.7}
     <div class="panel" style="display:flex;flex-direction:column;gap:12px">
       <span class="eyebrow">فكرة الورشة</span>
       <h2 style="font-size:1.2rem">نقرأ الحكاية، نفكّكها، ثم نحكم بالدليل</h2>
-      <p style="margin:0">تبدأ الورشة بحكاية صفية مترابطة من صف أول أساسي في درس اجتماعيات. يقرؤها المشارك كاملة، ثم يفكّكها إلى سلوكيات وإجراءات قام بها أربعة أطراف: الأطفال، والمعلمة، والمديرة، ومدرب التكنولوجيا. بعد ذلك يربط كل سلوك بالمعيار الذي يحققه أو يُخلّ به، فيتولّد تلقائيًا حكم على كل معيار من المعايير الستة والعشرين: مطبق أو غير مطبق. وفي الختام يُعرض مفتاح خبير مُعلَّل للمقارنة والنقاش.</p>
+      <p style="margin:0">تبدأ الورشة بحكاية صفية مترابطة من صف أول أساسي في درس اجتماعيات. يقرؤها المشارك كاملة، ثم يفكّكها إلى سلوكيات وإجراءات قام بها أربعة أطراف: المتعلم، والمعلمة، والمديرة، ومدرب التكنولوجيا. بعد ذلك يربط كل سلوك بالمعيار الذي يحققه أو يُخلّ به، فيتولّد تلقائيًا حكم على كل معيار من المعايير الستة والعشرين: مطبق أو غير مطبق. وفي الختام يُعرض مفتاح خبير مُعلَّل للمقارنة والنقاش.</p>
       <div class="pipeline" aria-label="منطق التحليل"><span>حكاية</span><i>←</i><span>سلوك إجرائي</span><i>←</i><span>معيار</span><i>←</i><span>حكم: مطبق / غير مطبق</span></div>
       <span class="eyebrow" style="margin-top:6px">نواتج التعلم المتوقعة</span>
       <ul class="clean">
@@ -369,7 +369,7 @@ const STORY=[
 const SENT={},SIDX={};STORY.flat().forEach(([id,t],i)=>{SENT[id]=t;SIDX[id]=i+1});
 
 const GROUPS=[
- {k:"stu",name:"الطالب المتعلم",short:"الأطفال"},
+ {k:"stu",name:"الطالب المتعلم",short:"المتعلم"},
  {k:"edu",name:"المعلم الميسر",short:"المعلمة"},
  {k:"led",name:"قائد التعليم",short:"المديرة"},
  {k:"coa",name:"المدرب الداعم",short:"المدرب"}
@@ -609,7 +609,7 @@ function keyHTML(){
   <div style="display:flex;flex-direction:column;gap:10px"><h3 style="font-size:1.05rem">ثانيًا: الحكم على المعايير</h3>
   <div class="tbl-wrap"><table class="keytbl" style="min-width:560px"><thead><tr><th>المعيار والشواهد</th><th>الحكم</th><th>مقترح إعادة الهندسة</th></tr></thead><tbody>${rowsB}</tbody></table></div></div>`;
 }
-const ACT=Object.fromEntries(GROUPS.map(g=>[g.short,g.k]));
+const ACT=Object.assign({"الأطفال":"stu"},Object.fromEntries(GROUPS.map(g=>[g.short,g.k])));
 function parseReport(txt){
   const who=(txt.match(/المشارك\/المجموعة:\s*(.+)/)||[])[1]||"مجموعة دون اسم";
   const bs=[];
