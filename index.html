@@ -33,6 +33,33 @@
   --ok-bg:#16301f; --bad-bg:#3a1719; --warn-bg:#33280f; --hl:#3b3416; --hl-line:#8c7424; color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
+.print-only{display:none}
+@media print{
+  @page{size:A4;margin:14mm 12mm}
+  html,body{background:#fff!important;color:#111!important}
+  body::before{display:none!important}
+  body>*:not(#printReport){display:none!important}
+  #printReport{display:block!important}
+}
+#printReport{font-family:var(--f-body);color:#111;font-size:10.5pt;line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+#printReport h1{font-family:var(--f-display);font-size:16pt;margin:0 0 2px}
+#printReport h2{font-family:var(--f-display);font-size:12pt;margin:14px 0 6px;padding-bottom:3px;border-bottom:1.5px solid #173a5c;color:#173a5c}
+#printReport .rstripe{display:flex;height:5px;width:120px;border-radius:3px;overflow:hidden;margin-bottom:8px}
+#printReport .rstripe i{flex:1}
+#printReport .rmeta{display:grid;grid-template-columns:repeat(2,1fr);gap:2px 18px;font-size:9.5pt;color:#333;margin:6px 0 4px}
+#printReport .rstats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0}
+#printReport .rstat{border:1px solid #c9d2dc;border-radius:6px;padding:6px 8px}
+#printReport .rstat b{display:block;font-family:var(--f-display);font-size:14pt;font-variant-numeric:tabular-nums}
+#printReport .rstat span{font-size:8.5pt;color:#444}
+#printReport table{width:100%;min-width:0;border-collapse:collapse;font-size:9pt}
+#printReport th,#printReport td{border:1px solid #c9d2dc;padding:4px 6px;text-align:right;vertical-align:top}
+#printReport th{background:#eef2f6;font-weight:600}
+#printReport tr{break-inside:avoid}
+#printReport .ok{color:#1f6b40;font-weight:600}#printReport .no{color:#a31d24;font-weight:600}
+#printReport .cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#printReport .cols ul{margin:0;padding-inline-start:16px;font-size:9pt}
+#printReport .refl p{margin:2px 0 8px;white-space:pre-wrap;border:1px solid #e1e6ec;border-radius:5px;padding:5px 8px;min-height:2.2em}
+#printReport .rfoot{margin-top:14px;font-size:8.5pt;color:#555;border-top:1px solid #c9d2dc;padding-top:6px}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:13;background:var(--bg)}
 body{margin:0}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15.5px;line-height:1.75;direction:rtl}
@@ -338,7 +365,7 @@ details.why div{margin-top:6px;font-size:.87rem;line-height:1.7}
     <textarea id="r2" rows="3"></textarea>
     <label for="r3"><b>3.</b> كيف ستوظّف معايير الطالب (ISTE) عند تخطيط درس لأطفال في سن ست سنوات؟ اذكر ممارسة واحدة.</label>
     <textarea id="r3" rows="3"></textarea>
-    <div class="row"><button class="btn" id="copyReport">نسخ التقرير الكامل</button><span class="note stu-only">الصق التقرير في نموذج التسليم الذي يحدده الميسّر.</span><button class="btn ghost" id="resetAll">بدء تحليل جديد</button><span class="note" id="resetConfirm" hidden>سيُمسح التحليل الحالي. <button class="btn ghost small" id="resetYes">تأكيد المسح</button></span></div>
+    <div class="row"><button class="btn" id="exportPdf">تصدير التقرير PDF</button><span class="note">في النافذة التي تظهر اختر «حفظ بصيغة PDF» (Save as PDF)، ثم سلّم الملف في موودل.</span><button class="btn ghost" id="resetAll">بدء تحليل جديد</button><span class="note" id="resetConfirm" hidden>سيُمسح التحليل الحالي. <button class="btn ghost small" id="resetYes">تأكيد المسح</button></span></div>
   </div>
   <div class="panel refs">
     <span class="eyebrow">المراجع (APA 7)</span>
@@ -358,6 +385,7 @@ details.why div{margin-top:6px;font-size:.87rem;line-height:1.7}
   <div class="row" style="justify-content:space-between"><button class="btn ghost small" id="apClear">إلغاء اختيار الجملة</button><button class="btn small" id="apDone">تم</button></div>
 </div>
 <div class="toast" id="toast" hidden></div>
+<div id="printReport" class="print-only" aria-hidden="true"></div>
 
 <script>
 const STORY=[
@@ -684,7 +712,32 @@ function report(){
 }
 function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,2400)}
 function fallback(txt){const ta=document.createElement("textarea");ta.value=txt;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand("copy")}catch(e){}ta.remove();toast(ok?"نُسخ التقرير":"تعذّر النسخ التلقائي")}
-$("#copyReport").addEventListener("click",()=>{const txt=report();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(()=>toast("نُسخ التقرير"),()=>fallback(txt))}else fallback(txt)});
+function buildReport(){
+  const now=new Date();let dt="";try{dt=now.toLocaleDateString("ar-JO",{year:"numeric",month:"long",day:"numeric"})}catch(e){dt=now.toISOString().slice(0,10)}
+  const keyOn=EXP.length&&(MODE==="fac"||st.saw);
+  const linked=st.bs.filter(b=>b.std).length,on=STD.filter(x=>linkedTo(x.id).length),off=STD.filter(x=>!linkedTo(x.id).length);
+  const ok=keyOn?EXP.filter(e=>matchExp(e,st.bs).exact).length:0;
+  const expMatch=b=>EXP.some(e=>e.sid===b.sid&&e.a===b.a&&e.std===b.std);
+  const rows=st.bs.map((b,i)=>`<tr><td>${i+1}</td><td>${SIDX[b.sid]}</td><td>${SENT[b.sid]}</td><td>${b.a?GN(b.a).short:"—"}</td><td>${b.std?b.std+" "+SN(b.std).n:"—"}</td>${keyOn?`<td class="${expMatch(b)?"ok":"no"}">${expMatch(b)?"مطابق":"مختلف"}</td>`:""}</tr>`).join("");
+  const R=st.refl;
+  return `<div class="rstripe"><i style="background:#1b6f94"></i><i style="background:#557f12"></i><i style="background:#b2302a"></i><i style="background:#b86e0b"></i></div>
+  <h1>تقرير تحليل حكاية صفية وفق معايير ISTE</h1>
+  <div class="rmeta"><div><b>المشارك/المجموعة:</b> ${esc(st.who||"—")}</div><div><b>التاريخ:</b> ${dt}</div><div><b>الحكاية:</b> الكتاب الناطق: أصحاب المهن في حيّنا</div><div><b>الصف والمبحث:</b> الأول الأساسي · الاجتماعيات</div></div>
+  <div class="rstats"><div class="rstat"><b>${st.bs.length}/27</b><span>سلوكيات مستخرجة</span></div><div class="rstat"><b>${linked}/${st.bs.length}</b><span>سلوكيات مرتبطة بمعيار</span></div><div class="rstat"><b>${on.length}/26</b><span>معايير ارتبط بها سلوك</span></div><div class="rstat"><b>${keyOn?ok+"/27":"—"}</b><span>${keyOn?"مطابقة لمفتاح الخبير":"لم يُفتح مفتاح الخبير"}</span></div></div>
+  <h2>أولًا: السلوكيات المستخرجة وفاعلها ومعيارها</h2>
+  <table><thead><tr><th>#</th><th>الجملة</th><th>نص الجملة</th><th>الفاعل</th><th>المعيار</th>${keyOn?"<th>المفتاح</th>":""}</tr></thead><tbody>${rows||`<tr><td colspan="6">لم تُستخرج سلوكيات.</td></tr>`}</tbody></table>
+  <h2>ثانيًا: المعايير</h2>
+  <div class="cols"><div><b>معايير ارتبط بها سلوك (${on.length})</b><ul>${on.map(x=>`<li>${x.id} ${x.n}</li>`).join("")||"<li>—</li>"}</ul></div><div><b>معايير لم يُربط بها سلوك (${off.length})</b><ul>${off.map(x=>`<li>${x.id} ${x.n}</li>`).join("")||"<li>—</li>"}</ul></div></div>
+  <h2>ثالثًا: إعادة الهندسة والتأمل</h2>
+  <div class="refl"><b>1. إعادة كتابة ممارسة ضعيفة:</b><p>${esc(R.r1||"—")}</p><b>2. ما فات أو اختلف عن مفتاح الخبير:</b><p>${esc(R.r2||"—")}</p><b>3. توظيف معايير الطالب في درس لأطفال في السادسة:</b><p>${esc(R.r3||"—")}</p></div>
+  <div class="rfoot">${MODE==="stu"?(st.saw?"اطّلع المشارك على مفتاح الخبير قبل تصدير هذا التقرير.":"صُدّر هذا التقرير قبل الاطلاع على مفتاح الخبير."):"نسخة الميسّر."} · مختبر تحليل المواقف التعليمية وفق معايير ISTE</div>`;
+}
+$("#exportPdf").addEventListener("click",()=>{
+  if(!(st.who||"").trim()){toast("اكتب اسم المشارك أو المجموعة أعلى الصفحة أولًا");const w=$("#who");w.scrollIntoView({block:"center"});w.focus();return}
+  $("#printReport").innerHTML=buildReport();
+  const old=document.title;document.title="تقرير ISTE - "+st.who.trim();
+  setTimeout(()=>{try{window.print()}catch(e){toast("تعذّر فتح نافذة الحفظ في هذا المتصفح")}document.title=old},50);
+});
 $("#resetAll").addEventListener("click",()=>{$("#resetConfirm").hidden=false});
 $("#resetYes").addEventListener("click",()=>{st={who:st.who,bs:[],refl:{r1:"",r2:"",r3:""},force:false,seq:0};save();["r1","r2","r3"].forEach(k=>$("#"+k).value="");$("#resetConfirm").hidden=true;go("extract");toast("بدأ تحليل جديد")});
 
